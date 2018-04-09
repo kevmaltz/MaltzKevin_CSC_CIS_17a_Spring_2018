@@ -1,64 +1,64 @@
-Post#HeadQuarters#Post#Headquarters#Post#
+P#H#P#H#P#
 0#0#0#0#0#
 0#0#0#0#0#
 NULL#NULL#NULL#NULL#NULL#
 
-Post#Post#Post#Post#Post#
+P#P#P#P#P#
 0#0#0#0#0#
 1#1#1#1#1#
 NULL#NULL#NULL#NULL#NULL#
 
-Post#Camp#Post#Camp#Post#
+P#C#P#C#P#
 0#0#0#0#0#
 1#0#0#0#1#
 NULL#NULL#NULL#NULL#NULL#
 
-Post#Post#Camp#Post#Post#
+P#P#C#P#P#
 0#0#0#0#0#
 1#0#0#0#1#
 NULL#NULL#NULL#NULL#NULL#
 
-Post#Camp#Post#Camp#Post#
+P#C#P#C#P#
 0#0#0#0#0#
 1#0#0#0#1#
 NULL#NULL#NULL#NULL#NULL#
 
-Post#Post#Post#Post#Post#
+P#P#P#P#P#
 0#0#0#0#0#
 1#1#1#1#1#
 NULL#NULL#NULL#NULL#NULL#
 
-Frontline#Mountain#Frontline#Mountain#Frontline#
+F#M#F#M#F#
 0#0#0#0#0#
 1#0#1#0#1#
 NULL#NULL#NULL#NULL#NULL#
 
-Post#Post#Post#Post#Post#
+P#P#P#P#P#
 0#0#0#0#0#
 1#1#1#1#1#
 NULL#NULL#NULL#NULL#NULL#
 
-Post#Camp#Post#Camp#Post#
+P#C#P#C#P#
 0#0#0#0#0#
 1#0#0#0#1#
 NULL#NULL#NULL#NULL#NULL#
 
-Post#Post#Camp#Post#Post#
+P#P#C#P#P#
 0#0#0#0#0#
 1#0#0#0#1#
 NULL#NULL#NULL#NULL#NULL#
 
-Post#Camp#Post#Camp#Post#
+P#C#P#C#P#
 0#0#0#0#0#
 1#0#0#0#1#
 NULL#NULL#NULL#NULL#NULL#
 
-Post#Post#Post#Post#Post#
+P#P#P#P#P#
 0#0#0#0#0#
 1#1#1#1#1#
 NULL#NULL#NULL#NULL#NULL#
 
-Post#HeadQuarters#Post#Headquarters#Post#
+P#H#P#H#P#
 0#0#0#0#0#
 0#0#0#0#0#
 NULL#NULL#NULL#NULL#NULL#

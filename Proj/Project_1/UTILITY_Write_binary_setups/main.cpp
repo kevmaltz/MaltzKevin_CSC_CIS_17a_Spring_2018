@@ -20,7 +20,7 @@ struct Unit
 };
 struct Location
 {
-    string type;    //What type of position is it. Camp/Battlefield/Frontline/Headquarters/Mountain
+    char type;    //What type of position is it. (C)amp/(P)ost/(F)rontline/(H)eadquarters/(M)ountain
     bool isOcp;     //If location occupied, set true
     bool isRR;      //Set true if location is on railroad line
     Unit *occUnit;  //Pointer to unit occupying the location.
@@ -46,7 +46,10 @@ int main(int argc, char** argv)
     for(int r=0; r< ROW_MX; r++)
     {
         for(int c=0; c < COL_MX; c++)
-            getline(txt, stream[c].type, '#');
+        {
+            txt.get(stream[c].type);
+            txt.ignore(1000,'#');
+        }
         txt.ignore(1000, '\n');
         for(int c=0; c < COL_MX; c++)
         {
