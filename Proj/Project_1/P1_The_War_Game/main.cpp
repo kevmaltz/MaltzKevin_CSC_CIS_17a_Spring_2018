@@ -30,23 +30,25 @@ struct Location
 const short ROW_MX = 13;
 const short COL_MX = 5;
 //Function Prototypes
-
+void initBrd(Location **, fstream &);
 //Execution begins here
 
 int main(int argc, char** argv) 
 {
     fstream setup("setup.txt", ios::in | ios::binary);
     Location **board;   //13x5 board
+    initBrd(board, setup);
+    
+    return 0;
+}
+
+void initBrd(Location **board, fstream &setup)
+{
     board = new Location*[ROW_MX];
     for(int r=0; r < ROW_MX; r++)
     {
         board[r] = new Location[COL_MX];
         for(int c=0; c < COL_MX; c++)
-        {
             setup.read(reinterpret_cast<char *>(board[r]+c), sizeof(board[r][c]));
-        }
     }
-    
-    return 0;
 }
-
