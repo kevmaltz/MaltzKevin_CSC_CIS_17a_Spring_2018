@@ -20,7 +20,7 @@ struct Unit
 };
 struct Location
 {
-    char type[13];  //What type of position is it. Camp/Battlefield/Frontline/Headquarters/Mountain
+    char type;  //What type of position is it. Camp/Battlefield/Frontline/Headquarters/Mountain
     bool isOcp;     //If location occupied, set true
     bool isRR;      //Set true if location is on railroad line
     Unit *occUnit;  //Pointer to unit occupying the location.
