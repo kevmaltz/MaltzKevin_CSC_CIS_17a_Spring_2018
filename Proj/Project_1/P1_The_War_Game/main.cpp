@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <cstdlib>
 using namespace std;
 
 //User Libraries
@@ -43,13 +44,18 @@ int main(int argc, char** argv)
         board = initBrd(setup);
         setup.close();
     }
+    else
+    {
+        cout << "ERROR: unable to open file Setut.dat, exiting program\n";
+        return EXIT_FAILURE;
+    }
     ptBrdLoc(board);
     
     for(int r=0; r < ROW_MX; r++)
         delete[] board[r];
         delete [] board;
     
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 Location **initBrd(fstream &setup)
