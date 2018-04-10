@@ -37,9 +37,14 @@ void ptBrdLoc(Location **); //test if binary file properly read to board structu
 //Execution begins here
 int main(int argc, char** argv) 
 {
+    int nPlyr = 0;
+    string plyr1;
+    string plyr2;
+    unsigned int turn = 0;  //The current turn number. Increments +1 every turn
+    
     fstream setup("setup.dat", ios::in | ios::binary);
     Location **board;   //13x5 board
-    if(setup.is_open() && setup.good())
+    {if(setup.is_open() && setup.good())
     {
         board = initBrd(setup);
         setup.close();
@@ -49,7 +54,30 @@ int main(int argc, char** argv)
         cout << "ERROR: unable to open file Setut.dat, exiting program\n";
         return EXIT_FAILURE;
     }
-    ptBrdLoc(board);
+    ptBrdLoc(board);}
+    
+    //TODO - Choice for a 1-vs-AI or 1-vs-1 game
+    cout << "Enter number of players(2 max): ";
+    cin >> nPlyr;
+    while(nPlyr != 1 && nPlyr != 2)
+    {
+        cout << "Invalid number of player. Re-enter(max 2): ";
+        cin >> nPlyr;
+    }
+    if(nPlyr == 1)
+    {
+        cout << "Enter player name: ";
+        getline(cin, plyr1);
+        plyr2 = "computer";
+    }
+    if(nPlyr == 2)
+    {
+        cout << "Enter player 1's name: ";
+        getline(cin, plyr1);
+        cout << "Enter player 2's name: ";
+        getline(cin, plyr2);
+    }
+    //TODO - Allow players to set up pieces
     
     for(int r=0; r < ROW_MX; r++)
         delete[] board[r];
