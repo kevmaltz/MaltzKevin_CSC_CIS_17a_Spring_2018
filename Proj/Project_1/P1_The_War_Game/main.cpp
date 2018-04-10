@@ -44,7 +44,7 @@ int main(int argc, char** argv)
         board = initBrd(setup);
         setup.close();
     }
-    else
+    else    //Return exit failure if setup file fails to open.
     {
         cout << "ERROR: unable to open file Setut.dat, exiting program\n";
         return EXIT_FAILURE;
@@ -66,8 +66,9 @@ Location **initBrd(fstream &setup)
     {
         board[r] = new Location[COL_MX];
         for(int c=0; c < COL_MX; c++)
-        {
+        {   //Read in binary data to a location structure
             setup.read(reinterpret_cast<char *>(board[r]+c), sizeof(board[r][c]));
+            //Ensure all Unit* set to NULL. Ensures no bad memory read in from file
             board[r][c].occUnit = NULL;
         }
     }
