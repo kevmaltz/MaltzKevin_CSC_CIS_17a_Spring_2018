@@ -88,7 +88,7 @@ int main(int argc, char** argv)
     int nmLngth;
     
     txt >> temp.priority >> temp.inPlay;
-    txt.ignore(1000,'\n');
+    txt.ignore(1000,' ');
     getline(txt, temp.name);
     //test if it worked
     cout << temp.priority << " " << temp.inPlay << " " << temp.name << endl;
