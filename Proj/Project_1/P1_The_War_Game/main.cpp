@@ -40,6 +40,7 @@ int main(int argc, char** argv)
     int nPlyr = 0;
     string plyr1;
     string plyr2;
+    bool ai = false;
     unsigned int turn = 0;  //The current turn number. Increments +1 every turn
     
     fstream setup("setup.dat", ios::in | ios::binary);
@@ -69,6 +70,7 @@ int main(int argc, char** argv)
         cout << "Enter player name: ";
         getline(cin, plyr1);
         plyr2 = "computer";
+        ai = true;
     }
     if(nPlyr == 2)
     {
