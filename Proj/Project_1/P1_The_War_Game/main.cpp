@@ -37,6 +37,8 @@ void ptBrdLoc(Location **); //test if binary file properly read to board structu
 //Execution begins here
 int main(int argc, char** argv) 
 {
+    const int N_PCS = 25;
+    
     int nPlyr = 0;
     string plyr1;
     string plyr2;
@@ -45,6 +47,8 @@ int main(int argc, char** argv)
     
     fstream setup("setup.dat", ios::in | ios::binary);
     Location **board;   //13x5 board
+    Unit p1Pcs[N_PCS];
+    Unit p2Pcs[N_PCS];
     {if(setup.is_open() && setup.good())
     {
         board = initBrd(setup);
