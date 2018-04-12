@@ -1,1 +1,25 @@
-
+9 1 Field Marshal
+8 1 Army
+7 1 Division
+7 1 Division
+6 1 Brigade
+6 1 Brigade
+5 1 Regiment
+5 1 Regiment
+4 1 Battalion
+4 1 Battalion
+3 1 Company
+3 1 Company
+3 1 Company
+2 1 Platoon
+2 1 Platoon
+2 1 Platoon
+1 1 Engineers
+1 1 Engineers
+1 1 Engineers
+10 1 Bomb
+10 1 Bomb
+10 1 Landmines
+10 1 Landmines
+10 1 Landmines
+0 1 Flag
