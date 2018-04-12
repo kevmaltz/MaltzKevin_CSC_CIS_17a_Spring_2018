@@ -92,8 +92,6 @@ int main(int argc, char** argv)
     txt >> temp.priority >> temp.inPlay;
     txt.ignore(1000,' ');
     getline(txt, temp.name);
-    //test if it worked
-    cout << temp.priority << " " << temp.inPlay << " " << temp.name << endl;
     //Write to binary
     nmLngth = temp.name.length();
     bin.write(reinterpret_cast<char*>(&nmLngth),sizeof(nmLngth));
