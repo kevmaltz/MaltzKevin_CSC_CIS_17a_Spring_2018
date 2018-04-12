@@ -49,9 +49,17 @@ int main(int argc, char** argv)
     Location **board;   //13x5 board
     Unit p1Pcs[N_PCS];
     Unit p2Pcs[N_PCS];
+    int nmLngth;
     {if(setup.is_open() && setup.good())
     {
         board = initBrd(setup);
+        for(int i=0; i < N_PCS; i++)
+        {
+            setup.read(reinterpret_cast<char*>(&nmLngth), sizeof(nmLngth));
+            p1Pcs[i].name.resize(nmLngth);
+            setup.read(reinterpret_cast<char*>(p1Pcs + i), sizeof(p1Pcs[i]));
+            cout << p1Pcs[0].priority << " " << p1Pcs[0].inPlay << " " << p1Pcs[0].name << endl;
+        }
         setup.close();
     }
     else    //Return exit failure if setup file fails to open.
