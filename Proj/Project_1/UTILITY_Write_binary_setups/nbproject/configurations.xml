@@ -9,6 +9,7 @@
                    displayName="Resource Files"
                    projectFiles="true">
       <itemPath>Setup.dat</itemPath>
+      <itemPath>pieces.txt</itemPath>
       <itemPath>text_input.txt</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
@@ -42,6 +43,8 @@
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="pieces.txt" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="text_input.txt" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
@@ -68,6 +71,8 @@
       <item path="Setup.dat" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="pieces.txt" ex="false" tool="3" flavor2="0">
       </item>
       <item path="text_input.txt" ex="false" tool="3" flavor2="0">
       </item>

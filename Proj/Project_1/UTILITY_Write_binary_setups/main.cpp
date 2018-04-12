@@ -83,7 +83,8 @@ int main(int argc, char** argv)
     }
     
     txt.close();
-    bin.close();
+    txt.open("pieces.txt", ios::in);
+    
 
     return 0;
 }
