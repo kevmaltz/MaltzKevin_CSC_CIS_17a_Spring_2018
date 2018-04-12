@@ -87,11 +87,14 @@ int main(int argc, char** argv)
     Unit temp;
     int nmLngth;
     
+    do
+    {
     txt >> temp.priority >> temp.inPlay;
     txt.ignore(1000,' ');
     getline(txt, temp.name);
     //test if it worked
     cout << temp.priority << " " << temp.inPlay << " " << temp.name << endl;
+    }while(!txt.eof());
     
     txt.close();
     bin.close();
