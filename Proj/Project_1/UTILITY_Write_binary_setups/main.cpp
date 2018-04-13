@@ -20,7 +20,7 @@ struct Unit
 };
 struct Location
 {
-    char type;    //What type of position is it. (C)amp/(P)ost/(F)rontline/(H)eadquarters/(M)ountain
+    char type;      //What type of position is it. (C)amp/(P)ost/(F)rontline/(H)eadquarters/(M)ountain
     bool isOcp;     //If location occupied, set true
     bool isRR;      //Set true if location is on railroad line
     Unit *occUnit;  //Pointer to unit occupying the location.
@@ -83,8 +83,49 @@ int main(int argc, char** argv)
     }
     
     txt.close();
+    
+    //Write the information for all player pieces to the binary file
+    txt.open("pieces.txt", ios::in);
+    Unit temp;
+    int nmLngth;
+    do
+    {
+    txt >> temp.priority >> temp.inPlay;
+    txt.ignore(1000,' ');
+    getline(txt, temp.name);
+    //Write to binary
+    nmLngth = temp.name.length();
+    bin.write(reinterpret_cast<char*>(&nmLngth),sizeof(nmLngth));
+    bin.write(reinterpret_cast<char*>(&(temp.priority)), sizeof(temp.priority));
+    bin.write(reinterpret_cast<char*>(&(temp.inPlay)), sizeof(temp.inPlay));
+    bin.write(temp.name.c_str(),nmLngth);
+    }while(!txt.eof());
+    
+    txt.close();
     bin.close();
-
+    
+//    Test if pieces.txt correctly written to binary.
+//    bin.open("Setup.dat", ios::in | ios::binary);
+//    Unit test;
+//    char *buf;
+//    int tstLngth;
+//    int n=0;
+//    do
+//    {
+//        n++;
+//        bin.read(reinterpret_cast<char*>(&tstLngth), sizeof(tstLngth));
+//        bin.read(reinterpret_cast<char*>(&(test.priority)), sizeof(test.priority));
+//        bin.read(reinterpret_cast<char*>(&(test.inPlay)), sizeof(test.inPlay));
+//        buf = new char[tstLngth + 1];
+//        bin.read(buf,tstLngth);
+//        buf[tstLngth] = '\0';
+//        test.name = buf;
+//        cout << test.priority << " " << test.inPlay << " " << test.name << endl;
+//        delete [] buf;
+//    }while(n<25);//!bin.eof());
+//    
+//    bin.close();
+    
     return 0;
 }
 

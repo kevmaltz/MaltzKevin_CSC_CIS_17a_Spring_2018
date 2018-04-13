@@ -37,11 +37,38 @@ void ptBrdLoc(Location **); //test if binary file properly read to board structu
 //Execution begins here
 int main(int argc, char** argv) 
 {
+    const int N_PCS = 25;
+    
+    int nPlyr = 0;
+    string plyr1;
+    string plyr2;
+    bool ai = false;
+    unsigned int turn = 0;  //The current turn number. Increments +1 every turn
+    
     fstream setup("setup.dat", ios::in | ios::binary);
     Location **board;   //13x5 board
+    Unit p1Pcs[N_PCS];
+    Unit p2Pcs[N_PCS];
+    int nmLngth;
+    char* buf;
     if(setup.is_open() && setup.good())
     {
         board = initBrd(setup);
+        //Read in data for each piece, copy p1Pcs to p2Pcs after each read
+        for(int i=0; i < N_PCS; i++)
+        {
+            setup.read(reinterpret_cast<char*>(&nmLngth), sizeof(nmLngth));
+            setup.read(reinterpret_cast<char*>(&(p1Pcs[i].priority)), sizeof(p1Pcs[i].priority));
+            setup.read(reinterpret_cast<char*>(&(p1Pcs[i].inPlay)), sizeof(p1Pcs[i].inPlay));
+            buf = new char[nmLngth + 1];
+            setup.read(buf,nmLngth);
+            buf[nmLngth] = '\0';
+            p1Pcs[i].name = buf;
+            p2Pcs[i].priority = p1Pcs[i].priority;
+            p2Pcs[i].inPlay = p1Pcs[i].inPlay;
+            p2Pcs[i].name = p1Pcs[i].name;
+            delete [] buf;
+        }
         setup.close();
     }
     else    //Return exit failure if setup file fails to open.
@@ -50,6 +77,31 @@ int main(int argc, char** argv)
         return EXIT_FAILURE;
     }
     ptBrdLoc(board);
+    
+    cout << "Enter number of players(2 max): ";
+    cin >> nPlyr;
+    while(nPlyr != 1 && nPlyr != 2)
+    {
+        cout << "Invalid number of player. Re-enter(max 2): ";
+        cin >> nPlyr;
+    }
+    if(nPlyr == 1)
+    {
+        cin.ignore(1000, '\n');
+        cout << "Enter player name: ";
+        getline(cin, plyr1);
+        plyr2 = "computer";
+        ai = true;
+    }
+    if(nPlyr == 2)
+    {
+        cin.ignore(1000, '\n');
+        cout << "Enter player 1's name: ";
+        getline(cin, plyr1);
+        cout << "Enter player 2's name: ";
+        getline(cin, plyr2);
+    }
+    //TODO - Allow players to set up pieces
     
     for(int r=0; r < ROW_MX; r++)
         delete[] board[r];
