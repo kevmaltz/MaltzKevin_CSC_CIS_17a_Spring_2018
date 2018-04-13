@@ -72,6 +72,15 @@ int main(int argc, char** argv)
     nPlyr = stPlyrs(plyr1, plyr2, ai);
     //TODO - Allow players to set up pieces
     
+    
+    
+    
+    
+    
+    
+    
+    
+    //Cleanup
     for(int r=0; r < ROW_MX; r++)
         delete[] board[r];
         delete [] board;
