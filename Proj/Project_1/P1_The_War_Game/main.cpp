@@ -35,6 +35,7 @@ const int N_PCS = 25;
 //Function Prototypes
 Location **initBrd(fstream &);  //Initializes the board
 void initPcs(fstream &, Unit [], Unit []);  //Initialize data for all pieces(Unit structures)
+int stPlyrs(string &, string&, bool&);
 void ptBrdLoc(Location **); //Test if binary file properly read to board structure array
 void ptPlyrs(Unit [], Unit []); //Test if player pieces read in successfully
 
@@ -115,8 +116,6 @@ Location **initBrd(fstream &setup)
     }
     return board;
 }
-
-
 void initPcs(fstream &setup, Unit p1[], Unit p2[])
 {
     int nmLngth;    //Length of string to be read in from binary, minus the null
@@ -138,7 +137,10 @@ void initPcs(fstream &setup, Unit p1[], Unit p2[])
             delete [] buf;
         }
 }
-
+int stPlyrs(string &, string&, bool&)
+{
+    
+}
 void ptBrdLoc(Location **brd)
 {
     for(int r=0; r < ROW_MX; r++)
