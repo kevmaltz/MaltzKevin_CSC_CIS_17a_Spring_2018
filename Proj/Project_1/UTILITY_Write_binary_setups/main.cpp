@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstring>
 using namespace std;
 
 //User Libraries
@@ -86,7 +87,9 @@ int main(int argc, char** argv)
     txt.open("pieces.txt", ios::in);
     Unit temp;
     int nmLngth;
-    
+    Unit test;
+    int tstLngth;
+    char *buf;
     do
     {
     txt >> temp.priority >> temp.inPlay;
@@ -94,12 +97,33 @@ int main(int argc, char** argv)
     getline(txt, temp.name);
     //Write to binary
     nmLngth = temp.name.length();
+    //temp.name.resize(nmLngth);
     bin.write(reinterpret_cast<char*>(&nmLngth),sizeof(nmLngth));
-    bin.write(reinterpret_cast<char*>(&temp),sizeof(temp));
+    bin.write(reinterpret_cast<char*>(&(temp.priority)), sizeof(temp.priority));
+    bin.write(reinterpret_cast<char*>(&(temp.inPlay)), sizeof(temp.inPlay));
+    bin.write(temp.name.c_str(),nmLngth);
     }while(!txt.eof());
     
     txt.close();
     bin.close();
+    
+//    bin.open("Setup.dat", ios::in | ios::binary);
+//    int n=0;
+//    do
+//    {
+//        n++;
+//        bin.read(reinterpret_cast<char*>(&tstLngth), sizeof(tstLngth));
+//        bin.read(reinterpret_cast<char*>(&(test.priority)), sizeof(test.priority));
+//        bin.read(reinterpret_cast<char*>(&(test.inPlay)), sizeof(test.inPlay));
+//        buf = new char[tstLngth + 1];
+//        bin.read(buf,tstLngth);
+//        buf[tstLngth] = '\0';
+//        test.name = buf;
+//        cout << test.priority << " " << test.inPlay << " " << test.name << endl;
+//        delete [] buf;
+//    }while(n<25);//!bin.eof());
+//    
+//    bin.close();
     
     return 0;
 }
