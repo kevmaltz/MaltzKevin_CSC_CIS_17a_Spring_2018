@@ -79,8 +79,6 @@ int main(int argc, char** argv)
         cout << "ERROR: unable to open file Setut.dat, exiting program\n";
         return EXIT_FAILURE;
     }
-    ptBrdLoc(board);
-    ptPlyrs(p1Pcs, p2Pcs);
     
     cout << "Enter number of players(2 max): ";
     cin >> nPlyr;
