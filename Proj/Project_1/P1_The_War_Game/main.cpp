@@ -33,10 +33,10 @@ const short COL_MX = 5;
 const int N_PCS = 25;
 
 //Function Prototypes
-Location **initBrd(fstream &);
-void initPcs(fstream &, Unit [], Unit []);
-void ptBrdLoc(Location **); //test if binary file properly read to board structure array
-void ptPlyrs(Unit [], Unit []);
+Location **initBrd(fstream &);  //Initializes the board
+void initPcs(fstream &, Unit [], Unit []);  //Initialize data for all pieces(Unit structures)
+void ptBrdLoc(Location **); //Test if binary file properly read to board structure array
+void ptPlyrs(Unit [], Unit []); //Test if player pieces read in successfully
 
 //Execution begins here
 int main(int argc, char** argv) 
@@ -119,8 +119,8 @@ Location **initBrd(fstream &setup)
 
 void initPcs(fstream &setup, Unit p1[], Unit p2[])
 {
-    int nmLngth;
-    char* buf;
+    int nmLngth;    //Length of string to be read in from binary, minus the null
+    char* buf;      //Buffer for reading in a string from the binary file
     for(int i=0; i < N_PCS; i++)
         {
             setup.read(reinterpret_cast<char*>(&nmLngth), sizeof(nmLngth));
@@ -130,9 +130,11 @@ void initPcs(fstream &setup, Unit p1[], Unit p2[])
             setup.read(buf,nmLngth);
             buf[nmLngth] = '\0';
             p1[i].name = buf;
+            //Copy over Unit structure from p1 to p2
             p2[i].priority = p1[i].priority;
             p2[i].inPlay = p1[i].inPlay;
             p2[i].name = p1[i].name;
+            //Release memory before next iteration to prevent memory leaks
             delete [] buf;
         }
 }
