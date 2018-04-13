@@ -9,7 +9,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <cstring>
 using namespace std;
 
 //User Libraries
@@ -21,7 +20,7 @@ struct Unit
 };
 struct Location
 {
-    char type;    //What type of position is it. (C)amp/(P)ost/(F)rontline/(H)eadquarters/(M)ountain
+    char type;      //What type of position is it. (C)amp/(P)ost/(F)rontline/(H)eadquarters/(M)ountain
     bool isOcp;     //If location occupied, set true
     bool isRR;      //Set true if location is on railroad line
     Unit *occUnit;  //Pointer to unit occupying the location.
@@ -84,12 +83,11 @@ int main(int argc, char** argv)
     }
     
     txt.close();
+    
+    //Write the information for all player pieces to the binary file
     txt.open("pieces.txt", ios::in);
     Unit temp;
     int nmLngth;
-    Unit test;
-    int tstLngth;
-    char *buf;
     do
     {
     txt >> temp.priority >> temp.inPlay;
@@ -97,7 +95,6 @@ int main(int argc, char** argv)
     getline(txt, temp.name);
     //Write to binary
     nmLngth = temp.name.length();
-    //temp.name.resize(nmLngth);
     bin.write(reinterpret_cast<char*>(&nmLngth),sizeof(nmLngth));
     bin.write(reinterpret_cast<char*>(&(temp.priority)), sizeof(temp.priority));
     bin.write(reinterpret_cast<char*>(&(temp.inPlay)), sizeof(temp.inPlay));
@@ -107,7 +104,11 @@ int main(int argc, char** argv)
     txt.close();
     bin.close();
     
+//    Test if pieces.txt correctly written to binary.
 //    bin.open("Setup.dat", ios::in | ios::binary);
+//    Unit test;
+//    char *buf;
+//    int tstLngth;
 //    int n=0;
 //    do
 //    {

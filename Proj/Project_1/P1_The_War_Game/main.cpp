@@ -49,13 +49,12 @@ int main(int argc, char** argv)
     Location **board;   //13x5 board
     Unit p1Pcs[N_PCS];
     Unit p2Pcs[N_PCS];
-    Unit test;
     int nmLngth;
     char* buf;
     if(setup.is_open() && setup.good())
     {
         board = initBrd(setup);
-        //Read in data for each piece
+        //Read in data for each piece, copy p1Pcs to p2Pcs after each read
         for(int i=0; i < N_PCS; i++)
         {
             setup.read(reinterpret_cast<char*>(&nmLngth), sizeof(nmLngth));
@@ -79,7 +78,6 @@ int main(int argc, char** argv)
     }
     ptBrdLoc(board);
     
-    //TODO - Choice for a 1-vs-AI or 1-vs-1 game
     cout << "Enter number of players(2 max): ";
     cin >> nPlyr;
     while(nPlyr != 1 && nPlyr != 2)
