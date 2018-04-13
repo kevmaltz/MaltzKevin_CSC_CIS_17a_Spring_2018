@@ -70,6 +70,7 @@ int main(int argc, char** argv)
     
     //Set player(s) and return number of human players
     nPlyr = stPlyrs(plyr1, plyr2, ai);
+    //TODO - Display the board, right now with no pieces.
     //TODO - Allow players to set up pieces
     
     
