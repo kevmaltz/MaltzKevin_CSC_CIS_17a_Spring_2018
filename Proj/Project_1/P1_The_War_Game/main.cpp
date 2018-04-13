@@ -30,6 +30,8 @@ struct Location
 //Global Constants - Math, Science, Conversions, 2D Array Sizes
 const short ROW_MX = 13;
 const short COL_MX = 5;
+const int N_PCS = 25;
+
 //Function Prototypes
 Location **initBrd(fstream &);
 void initPcs(fstream &, Unit [], Unit []);
@@ -38,8 +40,6 @@ void ptBrdLoc(Location **); //test if binary file properly read to board structu
 //Execution begins here
 int main(int argc, char** argv) 
 {
-    const int N_PCS = 25;
-    
     int nPlyr = 0;
     string plyr1;
     string plyr2;
