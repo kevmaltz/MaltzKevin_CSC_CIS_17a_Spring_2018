@@ -36,6 +36,7 @@ const int N_PCS = 25;
 Location **initBrd(fstream &);
 void initPcs(fstream &, Unit [], Unit []);
 void ptBrdLoc(Location **); //test if binary file properly read to board structure array
+void ptPlyrs(Unit [], Unit []);
 
 //Execution begins here
 int main(int argc, char** argv) 
@@ -50,26 +51,27 @@ int main(int argc, char** argv)
     Location **board;   //13x5 board
     Unit p1Pcs[N_PCS];
     Unit p2Pcs[N_PCS];
-    int nmLngth;
-    char* buf;
+//    int nmLngth;
+//    char* buf;
     if(setup.is_open() && setup.good())
     {
         board = initBrd(setup);
+        initPcs(setup, p1Pcs, p2Pcs);
         //Read in data for each piece, copy p1Pcs to p2Pcs after each read
-        for(int i=0; i < N_PCS; i++)
-        {
-            setup.read(reinterpret_cast<char*>(&nmLngth), sizeof(nmLngth));
-            setup.read(reinterpret_cast<char*>(&(p1Pcs[i].priority)), sizeof(p1Pcs[i].priority));
-            setup.read(reinterpret_cast<char*>(&(p1Pcs[i].inPlay)), sizeof(p1Pcs[i].inPlay));
-            buf = new char[nmLngth + 1];
-            setup.read(buf,nmLngth);
-            buf[nmLngth] = '\0';
-            p1Pcs[i].name = buf;
-            p2Pcs[i].priority = p1Pcs[i].priority;
-            p2Pcs[i].inPlay = p1Pcs[i].inPlay;
-            p2Pcs[i].name = p1Pcs[i].name;
-            delete [] buf;
-        }
+//        for(int i=0; i < N_PCS; i++)
+//        {
+//            setup.read(reinterpret_cast<char*>(&nmLngth), sizeof(nmLngth));
+//            setup.read(reinterpret_cast<char*>(&(p1Pcs[i].priority)), sizeof(p1Pcs[i].priority));
+//            setup.read(reinterpret_cast<char*>(&(p1Pcs[i].inPlay)), sizeof(p1Pcs[i].inPlay));
+//            buf = new char[nmLngth + 1];
+//            setup.read(buf,nmLngth);
+//            buf[nmLngth] = '\0';
+//            p1Pcs[i].name = buf;
+//            p2Pcs[i].priority = p1Pcs[i].priority;
+//            p2Pcs[i].inPlay = p1Pcs[i].inPlay;
+//            p2Pcs[i].name = p1Pcs[i].name;
+//            delete [] buf;
+//        }
         setup.close();
     }
     else    //Return exit failure if setup file fails to open.
@@ -165,5 +167,13 @@ void ptBrdLoc(Location **brd)
         for(int c=0; c < COL_MX; c++)
             cout << brd[r][c].occUnit << " ";
         cout << endl;
+    }
+}
+void ptPlyrs(Unit p1[], Unit p2[])
+{
+    for(int i=0; i < N_PCS; i++)
+    {
+        cout << "P1: " << p1[i].priority << " " << p1[i].inPlay << " " << p1[i].name << endl;
+        cout << "P2: " << p2[i].priority << " " << p2[i].inPlay << " " << p2[i].name << endl;
     }
 }
