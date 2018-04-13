@@ -51,27 +51,14 @@ int main(int argc, char** argv)
     Location **board;   //13x5 board
     Unit p1Pcs[N_PCS];
     Unit p2Pcs[N_PCS];
-//    int nmLngth;
-//    char* buf;
+    
     if(setup.is_open() && setup.good())
     {
+        //Read in data for every location on the board
         board = initBrd(setup);
+        //Read in data for each piece
         initPcs(setup, p1Pcs, p2Pcs);
-        //Read in data for each piece, copy p1Pcs to p2Pcs after each read
-//        for(int i=0; i < N_PCS; i++)
-//        {
-//            setup.read(reinterpret_cast<char*>(&nmLngth), sizeof(nmLngth));
-//            setup.read(reinterpret_cast<char*>(&(p1Pcs[i].priority)), sizeof(p1Pcs[i].priority));
-//            setup.read(reinterpret_cast<char*>(&(p1Pcs[i].inPlay)), sizeof(p1Pcs[i].inPlay));
-//            buf = new char[nmLngth + 1];
-//            setup.read(buf,nmLngth);
-//            buf[nmLngth] = '\0';
-//            p1Pcs[i].name = buf;
-//            p2Pcs[i].priority = p1Pcs[i].priority;
-//            p2Pcs[i].inPlay = p1Pcs[i].inPlay;
-//            p2Pcs[i].name = p1Pcs[i].name;
-//            delete [] buf;
-//        }
+        
         setup.close();
     }
     else    //Return exit failure if setup file fails to open.
