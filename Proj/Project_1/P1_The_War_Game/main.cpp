@@ -35,14 +35,14 @@ const int N_PCS = 25;
 //Function Prototypes
 Location **initBrd(fstream &);  //Initializes the board
 void initPcs(fstream &, Unit [], Unit []);  //Initialize data for all pieces(Unit structures)
-int stPlyrs(string &, string&, bool&);
+int stPlyrs(string &, string &, bool &);
 void ptBrdLoc(Location **); //Test if binary file properly read to board structure array
 void ptPlyrs(Unit [], Unit []); //Test if player pieces read in successfully
 
 //Execution begins here
 int main(int argc, char** argv) 
 {
-    int nPlyr = 0;
+    int nPlyr;
     string plyr1;
     string plyr2;
     bool ai = false;
@@ -68,29 +68,30 @@ int main(int argc, char** argv)
         return EXIT_FAILURE;
     }
     
-    cout << "Enter number of players(2 max): ";
-    cin >> nPlyr;
-    while(nPlyr != 1 && nPlyr != 2)
-    {
-        cout << "Invalid number of player. Re-enter(max 2): ";
-        cin >> nPlyr;
-    }
-    if(nPlyr == 1)
-    {
-        cin.ignore(1000, '\n');
-        cout << "Enter player name: ";
-        getline(cin, plyr1);
-        plyr2 = "computer";
-        ai = true;
-    }
-    if(nPlyr == 2)
-    {
-        cin.ignore(1000, '\n');
-        cout << "Enter player 1's name: ";
-        getline(cin, plyr1);
-        cout << "Enter player 2's name: ";
-        getline(cin, plyr2);
-    }
+    nPlyr = stPlyrs(plyr1, plyr2, ai);
+//    cout << "Enter number of players(2 max): ";
+//    cin >> nPlyr;
+//    while(nPlyr != 1 && nPlyr != 2)
+//    {
+//        cout << "Invalid number of player. Re-enter(max 2): ";
+//        cin >> nPlyr;
+//    }
+//    if(nPlyr == 1)
+//    {
+//        cin.ignore(1000, '\n');
+//        cout << "Enter player name: ";
+//        getline(cin, plyr1);
+//        plyr2 = "computer";
+//        ai = true;
+//    }
+//    if(nPlyr == 2)
+//    {
+//        cin.ignore(1000, '\n');
+//        cout << "Enter player 1's name: ";
+//        getline(cin, plyr1);
+//        cout << "Enter player 2's name: ";
+//        getline(cin, plyr2);
+//    }
     //TODO - Allow players to set up pieces
     
     for(int r=0; r < ROW_MX; r++)
@@ -137,9 +138,35 @@ void initPcs(fstream &setup, Unit p1[], Unit p2[])
             delete [] buf;
         }
 }
-int stPlyrs(string &, string&, bool&)
+int stPlyrs(string &plyr1, string &plyr2, bool &plyNPC)
 {
+    int nPlyr = 0;
     
+    cout << "2 player game or 1 player vs AI available\n";
+    cout << "Enter number of players(2 max): ";
+    cin >> nPlyr;
+    while(nPlyr != 1 && nPlyr != 2)
+    {
+        cout << "Invalid number of player. Re-enter(max 2): ";
+        cin >> nPlyr;
+    }
+    if(nPlyr == 1)
+    {
+        cin.ignore(1000, '\n');
+        cout << "Enter player name: ";
+        getline(cin, plyr1);
+        plyr2 = "NPC";
+        plyNPC = true;
+    }
+    if(nPlyr == 2)
+    {
+        cin.ignore(1000, '\n');
+        cout << "Enter player 1's name: ";
+        getline(cin, plyr1);
+        cout << "Enter player 2's name: ";
+        getline(cin, plyr2);
+    }
+    return nPlyr;
 }
 void ptBrdLoc(Location **brd)
 {
