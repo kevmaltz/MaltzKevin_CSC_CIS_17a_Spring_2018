@@ -30,15 +30,17 @@ struct Location
 //Global Constants - Math, Science, Conversions, 2D Array Sizes
 const short ROW_MX = 13;
 const short COL_MX = 5;
+const int N_PCS = 25;
+
 //Function Prototypes
-Location **initBrd(fstream &);
-void ptBrdLoc(Location **); //test if binary file properly read to board structure array
+Location **initBrd(fstream &);  //Initializes the board
+void initPcs(fstream &, Unit [], Unit []);  //Initialize data for all pieces(Unit structures)
+void ptBrdLoc(Location **); //Test if binary file properly read to board structure array
+void ptPlyrs(Unit [], Unit []); //Test if player pieces read in successfully
 
 //Execution begins here
 int main(int argc, char** argv) 
 {
-    const int N_PCS = 25;
-    
     int nPlyr = 0;
     string plyr1;
     string plyr2;
@@ -49,26 +51,14 @@ int main(int argc, char** argv)
     Location **board;   //13x5 board
     Unit p1Pcs[N_PCS];
     Unit p2Pcs[N_PCS];
-    int nmLngth;
-    char* buf;
+    
     if(setup.is_open() && setup.good())
     {
+        //Read in data for every location on the board
         board = initBrd(setup);
-        //Read in data for each piece, copy p1Pcs to p2Pcs after each read
-        for(int i=0; i < N_PCS; i++)
-        {
-            setup.read(reinterpret_cast<char*>(&nmLngth), sizeof(nmLngth));
-            setup.read(reinterpret_cast<char*>(&(p1Pcs[i].priority)), sizeof(p1Pcs[i].priority));
-            setup.read(reinterpret_cast<char*>(&(p1Pcs[i].inPlay)), sizeof(p1Pcs[i].inPlay));
-            buf = new char[nmLngth + 1];
-            setup.read(buf,nmLngth);
-            buf[nmLngth] = '\0';
-            p1Pcs[i].name = buf;
-            p2Pcs[i].priority = p1Pcs[i].priority;
-            p2Pcs[i].inPlay = p1Pcs[i].inPlay;
-            p2Pcs[i].name = p1Pcs[i].name;
-            delete [] buf;
-        }
+        //Read in data for each piece
+        initPcs(setup, p1Pcs, p2Pcs);
+        
         setup.close();
     }
     else    //Return exit failure if setup file fails to open.
@@ -76,7 +66,6 @@ int main(int argc, char** argv)
         cout << "ERROR: unable to open file Setut.dat, exiting program\n";
         return EXIT_FAILURE;
     }
-    ptBrdLoc(board);
     
     cout << "Enter number of players(2 max): ";
     cin >> nPlyr;
@@ -126,6 +115,30 @@ Location **initBrd(fstream &setup)
     }
     return board;
 }
+
+
+void initPcs(fstream &setup, Unit p1[], Unit p2[])
+{
+    int nmLngth;    //Length of string to be read in from binary, minus the null
+    char* buf;      //Buffer for reading in a string from the binary file
+    for(int i=0; i < N_PCS; i++)
+        {
+            setup.read(reinterpret_cast<char*>(&nmLngth), sizeof(nmLngth));
+            setup.read(reinterpret_cast<char*>(&(p1[i].priority)), sizeof(p1[i].priority));
+            setup.read(reinterpret_cast<char*>(&(p1[i].inPlay)), sizeof(p1[i].inPlay));
+            buf = new char[nmLngth + 1];
+            setup.read(buf,nmLngth);
+            buf[nmLngth] = '\0';
+            p1[i].name = buf;
+            //Copy over Unit structure from p1 to p2
+            p2[i].priority = p1[i].priority;
+            p2[i].inPlay = p1[i].inPlay;
+            p2[i].name = p1[i].name;
+            //Release memory before next iteration to prevent memory leaks
+            delete [] buf;
+        }
+}
+
 void ptBrdLoc(Location **brd)
 {
     for(int r=0; r < ROW_MX; r++)
@@ -142,5 +155,13 @@ void ptBrdLoc(Location **brd)
         for(int c=0; c < COL_MX; c++)
             cout << brd[r][c].occUnit << " ";
         cout << endl;
+    }
+}
+void ptPlyrs(Unit p1[], Unit p2[])
+{
+    for(int i=0; i < N_PCS; i++)
+    {
+        cout << "P1: " << p1[i].priority << " " << p1[i].inPlay << " " << p1[i].name << endl;
+        cout << "P2: " << p2[i].priority << " " << p2[i].inPlay << " " << p2[i].name << endl;
     }
 }
