@@ -80,6 +80,7 @@ int main(int argc, char** argv)
         return EXIT_FAILURE;
     }
     ptBrdLoc(board);
+    ptPlyrs(p1Pcs, p2Pcs);
     
     cout << "Enter number of players(2 max): ";
     cin >> nPlyr;
