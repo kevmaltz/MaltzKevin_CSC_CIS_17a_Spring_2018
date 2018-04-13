@@ -32,6 +32,7 @@ const short ROW_MX = 13;
 const short COL_MX = 5;
 //Function Prototypes
 Location **initBrd(fstream &);
+void initPcs(fstream &, Unit [], Unit []);
 void ptBrdLoc(Location **); //test if binary file properly read to board structure array
 
 //Execution begins here
@@ -126,6 +127,13 @@ Location **initBrd(fstream &setup)
     }
     return board;
 }
+
+
+void initPcs(fstream &setup, Unit p1[], Unit p2[])
+{
+    
+}
+
 void ptBrdLoc(Location **brd)
 {
     for(int r=0; r < ROW_MX; r++)
