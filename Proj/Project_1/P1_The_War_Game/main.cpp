@@ -131,7 +131,22 @@ Location **initBrd(fstream &setup)
 
 void initPcs(fstream &setup, Unit p1[], Unit p2[])
 {
-    
+    int nmLngth;
+    char* buf;
+    for(int i=0; i < N_PCS; i++)
+        {
+            setup.read(reinterpret_cast<char*>(&nmLngth), sizeof(nmLngth));
+            setup.read(reinterpret_cast<char*>(&(p1[i].priority)), sizeof(p1[i].priority));
+            setup.read(reinterpret_cast<char*>(&(p1[i].inPlay)), sizeof(p1[i].inPlay));
+            buf = new char[nmLngth + 1];
+            setup.read(buf,nmLngth);
+            buf[nmLngth] = '\0';
+            p1[i].name = buf;
+            p2[i].priority = p1[i].priority;
+            p2[i].inPlay = p1[i].inPlay;
+            p2[i].name = p1[i].name;
+            delete [] buf;
+        }
 }
 
 void ptBrdLoc(Location **brd)
