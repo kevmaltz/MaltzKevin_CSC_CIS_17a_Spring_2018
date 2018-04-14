@@ -72,7 +72,53 @@ int main(int argc, char** argv)
     nPlyr = stPlyrs(plyr1, plyr2, ai);
     //TODO - Display the board, right now with no pieces.
     //TODO - Allow players to set up pieces
-    
+    string slctn;   //piece selection entered by player
+    int mtchInd;    //Index of Unit.name in pxPcs that matches slctn. -1 sentinel value
+    bool allSet;    //Stays true if all pieces have been set on the board
+    //player 1 piece setup
+    cout << "Place your pieces on the board.\n";
+    do
+    {
+        allSet = true;
+        mtchInd = -1;
+        cout << "Unplaced pieces:\n";
+        for(int i=0; i < N_PCS; i++)
+        {
+            if(p1Pcs[i].inPlay == false)
+                cout << p1Pcs[i].name << endl;
+        }
+        //Prompt for choice of piece
+        cout << "Select a piece by typing in the name: ";
+        getline(cin, slctn);
+        //Convert string to proper case formatting
+        slctn[0] = toupper(slctn[0]);
+        for(int i=1; i<slctn.length(); i++)
+            slctn[i] = tolower(slctn[i]);
+        //Proper capitalization for Field Marshal
+        if(slctn.length() == 13)
+            slctn[6] = toupper(slctn[6]);
+        //Check if selection is valid. If valid store index of selected unit
+        for(int i=0; i < N_PCS; i++)
+        {
+            if(p1Pcs[i].inPlay == false)
+                if(p1Pcs[i].name == slctn)
+                    mtchInd = i;
+        }
+        //If no valid match found notify player and restart loop from top
+        if(mtchInd == -1)
+        {
+            cout << "Invalid selection\n";
+            allSet = false;
+            continue;
+        }
+        cout << "made it past continue statement on invalid input\n";
+        for(int i=0; i < N_PCS; i++)
+        {
+            if(p1Pcs[i].inPlay == false)
+                allSet = false;
+        }
+    }while(!allSet);    //TODO - write algorithm for placing pieces, otherwise infinite loop
+    //player 2 piece setup
     
     
     
