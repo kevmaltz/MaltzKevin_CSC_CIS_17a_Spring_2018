@@ -75,6 +75,8 @@ int main(int argc, char** argv)
     string slctn;   //piece selection entered by player
     int mtchInd;    //Index of Unit.name in pxPcs that matches slctn. -1 sentinel value
     bool allSet;    //Stays true if all pieces have been set on the board
+    int slctR, slctC;   //selected row and column of location to place a piece
+    bool locGd;     //Set true if entered location is valid
     //player 1 piece setup
     cout << "Place your pieces on the board.\n";
     do
@@ -102,7 +104,10 @@ int main(int argc, char** argv)
         {
             if(p1Pcs[i].inPlay == false)
                 if(p1Pcs[i].name == slctn)
+                {
                     mtchInd = i;
+                    break;
+                }
         }
         //If no valid match found notify player and restart loop from top
         if(mtchInd == -1)
@@ -111,11 +116,35 @@ int main(int argc, char** argv)
             allSet = false;
             continue;
         }
-        cout << "made it past continue statement on invalid input\n";
+        //TODO - Set pieces on board
+        do  //Get and validate location selection
+        {
+            slctR = slctC = -1;
+            cout << "Enter row,column to select a location to place the " << p1Pcs[mtchInd].name 
+                 <<": ";
+            //TODO - change this to use a stringstream to catch any error in the way user inputs numbers
+            cin >> slctR; cin.ignore(1000,','); cin >> slctC;
+            if(slctR < 0 || slctR >= ROW_MX)
+            {
+                locGd = false;
+                cout << "Invalid location\n";
+            }
+            else if(slctC < 0 || slctC >= COL_MX)
+            {
+                locGd = false;
+                cout << "Invalid location\n";
+            }
+        }while(locGd == false);
+        
+        
+        //If any pieces are not yet set in play, allSet=false and loop setup
         for(int i=0; i < N_PCS; i++)
         {
             if(p1Pcs[i].inPlay == false)
+            {
                 allSet = false;
+                break;
+            }
         }
     }while(!allSet);    //TODO - write algorithm for placing pieces, otherwise infinite loop
     //player 2 piece setup
