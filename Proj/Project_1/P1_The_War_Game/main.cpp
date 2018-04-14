@@ -118,11 +118,11 @@ int main(int argc, char** argv)
             allSet = false;
             continue;
         }
-        //TODO - Set pieces on board
+        //Setup pieces on board
         do
         {
             repeat = false;
-            do  //Get and validate location selection
+            do  //Get and validate location selection. Repeats till location is valid
             {
                 slctR = slctC = -1;
                 cout << "Enter row,column to select a location to place the " << p1Pcs[mtchInd].name 
@@ -141,16 +141,16 @@ int main(int argc, char** argv)
                     cout << "Invalid location\n";
                 }
             }while(locGd == false);
-            //Place piece at chosen location
-            //check if already occupied
+            //Check if chosen location is already occupied, decide what to do
             if(board[slctR][slctC].occUnit != NULL)
             {
                 cout << board[slctR][slctC].occUnit->name
                      << " is already at that location.\nDo you wish to replace it with "
                      << p1Pcs[mtchInd].name << "? Enter Y or N: ";
                 cin >> rpPc; cin.ignore(1000,'\n');
+                //Repeat location selection process if no, replace piece otherwise
                 if(rpPc == 'n' || rpPc == 'N')
-                {
+                {   
                     repeat = true;
                     continue;
                 }
@@ -175,7 +175,7 @@ int main(int argc, char** argv)
                 break;
             }
         }
-    }while(!allSet);    //TODO - write algorithm for placing pieces, otherwise infinite loop
+    }while(!allSet);
     //player 2 piece setup
     
     
