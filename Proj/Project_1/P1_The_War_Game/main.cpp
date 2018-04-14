@@ -133,14 +133,15 @@ int stPlyrs(string &plyr1, string &plyr2, bool &plyNPC)
     cout << "2 player game or 1 player vs AI available\n";
     cout << "Enter number of players(2 max): ";
     cin >> nPlyr;
+    cin.ignore(1000, '\n');
     while(nPlyr != 1 && nPlyr != 2)
     {
         cout << "Invalid number of player. Re-enter(max 2): ";
         cin >> nPlyr;
+        cin.ignore(1000, '\n');
     }
     if(nPlyr == 1)
     {
-        cin.ignore(1000, '\n');
         cout << "Enter player name: ";
         getline(cin, plyr1);
         plyr2 = "NPC";
@@ -148,7 +149,6 @@ int stPlyrs(string &plyr1, string &plyr2, bool &plyNPC)
     }
     if(nPlyr == 2)
     {
-        cin.ignore(1000, '\n');
         cout << "Enter player 1's name: ";
         getline(cin, plyr1);
         cout << "Enter player 2's name: ";
