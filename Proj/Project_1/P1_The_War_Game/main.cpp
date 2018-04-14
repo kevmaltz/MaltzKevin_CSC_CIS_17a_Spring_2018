@@ -77,6 +77,8 @@ int main(int argc, char** argv)
     bool allSet;    //Stays true if all pieces have been set on the board
     int slctR, slctC;   //selected row and column of location to place a piece
     bool locGd;     //Set true if entered location is valid
+    char rpPc;      //Choice to replace a piece if location is already occupied
+    bool repeat;    //General boolean to use if loops need repeating
     //player 1 piece setup
     cout << "Place your pieces on the board.\n";
     do
@@ -117,25 +119,52 @@ int main(int argc, char** argv)
             continue;
         }
         //TODO - Set pieces on board
-        do  //Get and validate location selection
+        do
         {
-            slctR = slctC = -1;
-            cout << "Enter row,column to select a location to place the " << p1Pcs[mtchInd].name 
-                 <<": ";
-            //TODO - change this to use a stringstream to catch any error in the way user inputs numbers
-            cin >> slctR; cin.ignore(1000,','); cin >> slctC;
-            if(slctR < 0 || slctR >= ROW_MX)
+            repeat = false;
+            do  //Get and validate location selection
             {
-                locGd = false;
-                cout << "Invalid location\n";
-            }
-            else if(slctC < 0 || slctC >= COL_MX)
+                slctR = slctC = -1;
+                cout << "Enter row,column to select a location to place the " << p1Pcs[mtchInd].name 
+                     <<": ";
+                //TODO - change this to use a stringstream to catch any error in the way user inputs numbers
+                cin >> slctR; cin.ignore(1000,','); 
+                cin >> slctC; cin.ignore(1000,'\n');
+                if(slctR < 0 || slctR >= ROW_MX)
+                {
+                    locGd = false;
+                    cout << "Invalid location\n";
+                }
+                else if(slctC < 0 || slctC >= COL_MX)
+                {
+                    locGd = false;
+                    cout << "Invalid location\n";
+                }
+            }while(locGd == false);
+            //Place piece at chosen location
+            //check if already occupied
+            if(board[slctR][slctC].occUnit != NULL)
             {
-                locGd = false;
-                cout << "Invalid location\n";
+                cout << board[slctR][slctC].occUnit->name
+                     << " is already at that location.\nDo you wish to replace it with "
+                     << p1Pcs[mtchInd].name << "? Enter Y or N: ";
+                cin >> rpPc; cin.ignore(1000,'\n');
+                if(rpPc == 'n' || rpPc == 'N')
+                {
+                    repeat = true;
+                    continue;
+                }
+                else if(rpPc == 'y' || rpPc == 'Y')
+                    board[slctR][slctC].occUnit->inPlay = false;
+                else
+                {
+                    cout << "Invalid entry. Replacing piece anyways.\n";
+                    board[slctR][slctC].occUnit->inPlay = false;
+                }
             }
-        }while(locGd == false);
-        
+        }while(repeat);
+        board[slctR][slctC].occUnit = &p1Pcs[mtchInd];
+        board[slctR][slctC].occUnit->inPlay = true;
         
         //If any pieces are not yet set in play, allSet=false and loop setup
         for(int i=0; i < N_PCS; i++)
