@@ -26,6 +26,8 @@ struct Location
     char type;      //What type of position is it. Camp/Battlefield/Frontline/Headquarters/Mountain
     bool isOcp;     //If location occupied, set true
     bool isRR;      //Set true if location is on railroad line
+    char dsply1[5][13]; //Display for player 1
+    char dsply2[5][13]; //Display for player 2
     Unit *occUnit;  //Pointer to unit occupying the location.
 };
 
