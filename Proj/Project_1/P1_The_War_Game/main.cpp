@@ -71,9 +71,228 @@ int main(int argc, char** argv)
     //Set player(s) and return number of human players
     nPlyr = stPlyrs(plyr1, plyr2, ai);
     //TODO - Display the board, right now with no pieces.
-    //TODO - Allow players to set up pieces
     
+    /*SET PIECES ON BOARD*/
+    string slctn;   //piece selection entered by player
+    int mtchInd;    //Index of Unit.name in pxPcs that matches slctn. -1 sentinel value
+    bool allSet;    //Stays true if all pieces have been set on the board
+    int slctR, slctC;   //selected row and column of location to place a piece
+    bool locGd;     //Set true if entered location is valid
+    char rpPc;      //Choice to replace a piece if location is already occupied
+    bool repeat;    //General boolean to use if loops need repeating
+    const int R_MX_P1 = 5;  //Maximum row index player 1 can set pieces at
+    const int R_MN_P2 = 7;  //Minimum row index player 2 can set pieces at
+    //player 1 piece setup
+    cout << plyr1 << " place your pieces on the board.\n";
+    do
+    {
+        allSet = true;
+        mtchInd = -1;
+        cout << "Unplaced pieces:\n";
+        for(int i=0; i < N_PCS; i++)
+        {
+            if(p1Pcs[i].inPlay == false)
+                cout << p1Pcs[i].name << endl;
+        }
+        
+        //Prompt for choice of piece
+        cout << "Select a piece by typing in the name: ";
+        getline(cin, slctn);
+        
+        //Convert string to proper case formatting
+        slctn[0] = toupper(slctn[0]);
+        for(int i=1; i<slctn.length(); i++)
+            slctn[i] = tolower(slctn[i]);
+        
+        //Proper capitalization for Field Marshal
+        if(slctn.length() == 13)
+            slctn[6] = toupper(slctn[6]);
+        
+        //Check if piece selection is valid. If valid store index of selected unit
+        for(int i=0; i < N_PCS; i++)
+        {
+            if(p1Pcs[i].inPlay == false)
+                if(p1Pcs[i].name == slctn)
+                {
+                    mtchInd = i;
+                    break;
+                }
+        }
+        
+        //If no valid match found notify player and restart loop from top
+        if(mtchInd == -1)
+        {
+            cout << "Invalid selection\n";
+            allSet = false;
+            continue;
+        }
+        
+        //Setup pieces on board
+        do
+        {
+            repeat = false;
+            do  //Get and validate location selection. Repeats till location is valid
+            {
+                slctR = slctC = -1;
+                cout << "Enter row,column to select a location to place the " << p1Pcs[mtchInd].name 
+                     <<": ";
+                //TODO - change this to use a stringstream to catch any error in the way user inputs numbers
+                cin >> slctR; cin.ignore(1000,','); 
+                cin >> slctC; cin.ignore(1000,'\n');
+                if(slctR < 0 || slctR > R_MX_P1)
+                {
+                    locGd = false;
+                    cout << "Invalid location\n";
+                }
+                else if(slctC < 0 || slctC >= COL_MX)
+                {
+                    locGd = false;
+                    cout << "Invalid location\n";
+                }
+            }while(locGd == false);
+            
+            //Check if chosen location is already occupied, decide what to do
+            if(board[slctR][slctC].occUnit != NULL)
+            {
+                cout << board[slctR][slctC].occUnit->name
+                     << " is already at that location.\nDo you wish to replace it with "
+                     << p1Pcs[mtchInd].name << "? Enter Y or N: ";
+                cin >> rpPc; cin.ignore(1000,'\n');
+                
+                //Repeat location selection process if no, replace piece otherwise
+                if(rpPc == 'n' || rpPc == 'N')
+                {   
+                    repeat = true;
+                    continue;
+                }
+                else if(rpPc == 'y' || rpPc == 'Y')
+                    board[slctR][slctC].occUnit->inPlay = false;
+                else
+                {
+                    cout << "Invalid entry. Replacing piece anyways.\n";
+                    board[slctR][slctC].occUnit->inPlay = false;
+                }
+            }
+        }while(repeat);
+        board[slctR][slctC].occUnit = &p1Pcs[mtchInd];
+        board[slctR][slctC].occUnit->inPlay = true;
+        
+        //If any pieces are not yet set in play, allSet=false and loop setup
+        for(int i=0; i < N_PCS; i++)
+        {
+            if(p1Pcs[i].inPlay == false)
+            {
+                allSet = false;
+                break;
+            }
+        }
+    }while(!allSet);
     
+    //player 2 piece setup
+    cout << plyr2 << " place your pieces on the board.\n";
+    do
+    {
+        allSet = true;
+        mtchInd = -1;
+        cout << "Unplaced pieces:\n";
+        for(int i=0; i < N_PCS; i++)
+        {
+            if(p2Pcs[i].inPlay == false)
+                cout << p2Pcs[i].name << endl;
+        }
+        
+        //Prompt for choice of piece
+        cout << "Select a piece by typing in the name: ";
+        getline(cin, slctn);
+        
+        //Convert string to proper case formatting
+        slctn[0] = toupper(slctn[0]);
+        for(int i=1; i<slctn.length(); i++)
+            slctn[i] = tolower(slctn[i]);
+        
+        //Proper capitalization for Field Marshal
+        if(slctn.length() == 13)
+            slctn[6] = toupper(slctn[6]);
+        
+        //Check if piece selection is valid. If valid store index of selected unit
+        for(int i=0; i < N_PCS; i++)
+        {
+            if(p2Pcs[i].inPlay == false)
+                if(p2Pcs[i].name == slctn)
+                {
+                    mtchInd = i;
+                    break;
+                }
+        }
+        
+        //If no valid match found notify player and restart loop from top
+        if(mtchInd == -1)
+        {
+            cout << "Invalid selection\n";
+            allSet = false;
+            continue;
+        }
+        
+        //Setup pieces on board
+        do
+        {
+            repeat = false;
+            do  //Get and validate location selection. Repeats till location is valid
+            {
+                slctR = slctC = -1;
+                cout << "Enter row,column to select a location to place the " << p2Pcs[mtchInd].name 
+                     <<": ";
+                //TODO - change this to use a stringstream to catch any error in the way user inputs numbers
+                cin >> slctR; cin.ignore(1000,','); 
+                cin >> slctC; cin.ignore(1000,'\n');
+                if(slctR < R_MN_P2 || slctR >= ROW_MX)
+                {
+                    locGd = false;
+                    cout << "Invalid location\n";
+                }
+                else if(slctC < 0 || slctC >= COL_MX)
+                {
+                    locGd = false;
+                    cout << "Invalid location\n";
+                }
+            }while(locGd == false);
+            
+            //Check if chosen location is already occupied, decide what to do
+            if(board[slctR][slctC].occUnit != NULL)
+            {
+                cout << board[slctR][slctC].occUnit->name
+                     << " is already at that location.\nDo you wish to replace it with "
+                     << p2Pcs[mtchInd].name << "? Enter Y or N: ";
+                cin >> rpPc; cin.ignore(1000,'\n');
+                
+                //Repeat location selection process if no, replace piece otherwise
+                if(rpPc == 'n' || rpPc == 'N')
+                {   
+                    repeat = true;
+                    continue;
+                }
+                else if(rpPc == 'y' || rpPc == 'Y')
+                    board[slctR][slctC].occUnit->inPlay = false;
+                else
+                {
+                    cout << "Invalid entry. Replacing piece anyways.\n";
+                    board[slctR][slctC].occUnit->inPlay = false;
+                }
+            }
+        }while(repeat);
+        board[slctR][slctC].occUnit = &p2Pcs[mtchInd];
+        board[slctR][slctC].occUnit->inPlay = true;
+        
+        //If any pieces are not yet set in play, allSet=false and loop setup
+        for(int i=0; i < N_PCS; i++)
+        {
+            if(p2Pcs[i].inPlay == false)
+            {
+                allSet = false;
+                break;
+            }
+        }
+    }while(!allSet);
     
     
     
