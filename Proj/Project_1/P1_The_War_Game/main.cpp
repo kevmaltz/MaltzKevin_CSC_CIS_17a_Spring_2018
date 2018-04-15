@@ -10,6 +10,7 @@
 #include <string>
 #include <fstream>
 #include <cstdlib>
+#include "Displays.h"
 using namespace std;
 
 //User Libraries
