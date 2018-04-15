@@ -420,7 +420,15 @@ void ocpy(Location* loc, Unit* unit)
 }
 void unOcpy(Location* loc)
 {
-    
+    loc->occUnit = NULL;
+    loc->isOcp = false;
+    for(int i=0; i < RM_HT-2; i++)
+        for(int j=0; j < RM_WD-2; j++)
+        {
+            loc->dsply1[1+i][1+j] = ' ';
+            loc->dsply2[1+i][1+j] = ' ';
+        }
+        
 }
 void ptBrdLoc(Location **brd)
 {
