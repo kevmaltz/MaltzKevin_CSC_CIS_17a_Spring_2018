@@ -29,6 +29,8 @@ struct Location
 };
 
 //Global Constants - Math, Science, Conversions, 2D Array Sizes
+const int RM_WD = 5;    //Must be = to the r of Location.dsply[r][c]
+const int RM_HT = 13;   //Must be = to the c of Location.dsply[r][c]
 
 //Function Prototypes
 
@@ -66,10 +68,10 @@ int main(int argc, char** argv)
         }
         txt.ignore(1000, '\n');
         //get display data
-        for(int i=0; i < 5; i++)
+        for(int i=0; i < RM_WD; i++)
         {
             for(int c=0; c < COL_MX; c++)
-                for(int j=0; j < 13; j++)
+                for(int j=0; j < RM_HT; j++)
                 {
                     txt.get(stream[c].dsply1[i][j]);
                     stream[c].dsply2[i][j] = stream[c].dsply1[i][j];
