@@ -19,6 +19,7 @@ struct Unit
     unsigned short priority;  //The value representing its position on the attack hierarchy, higher is better
     bool inPlay;    //If unit is still in play, set true. When unit leaves play, set false.
     string name;    //Name of piece
+    int plyrID;     //ID of player who owns the unit.( ID = 1 or ID = 2 )
 };
 struct Location
 {
@@ -338,10 +339,16 @@ void initPcs(fstream &setup, Unit p1[], Unit p2[])
             setup.read(buf,nmLngth);
             buf[nmLngth] = '\0';
             p1[i].name = buf;
+            
             //Copy over Unit structure from p1 to p2
             p2[i].priority = p1[i].priority;
             p2[i].inPlay = p1[i].inPlay;
             p2[i].name = p1[i].name;
+            
+            //Set ownership of pieces
+            p1[i].plyrID = 1;
+            p2[i].plyrID = 2;
+            
             //Release memory before next iteration to prevent memory leaks
             delete [] buf;
         }
