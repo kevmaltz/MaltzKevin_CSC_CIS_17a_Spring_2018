@@ -401,6 +401,17 @@ void ptBrdLoc(Location **brd)
         for(int c=0; c < COL_MX; c++)
             cout << brd[r][c].occUnit << " ";
         cout << endl;
+        for(int i=0; i < 5; i++)
+        {
+            for(int c=0; c < COL_MX; c++)
+                for(int j=0; j < 13; j++)
+                {
+                    cout << brd[r][c].dsply1[i][j];
+                    if(j==12)
+                        cout << "     ";
+                }
+            cout << endl;
+        }
     }
 }
 void ptPlyrs(Unit p1[], Unit p2[])
