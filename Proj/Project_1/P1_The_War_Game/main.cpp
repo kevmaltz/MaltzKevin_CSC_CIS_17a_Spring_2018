@@ -41,6 +41,8 @@ const int RM_HT = 13;   //Must be = to the c of Location.dsply[r][c]
 Location **initBrd(fstream &);  //Initializes the board
 void initPcs(fstream &, Unit [], Unit []);  //Initialize data for all pieces(Unit structures)
 int stPlyrs(string &, string &, bool &);    //Sets the players and their names, returns number of human players
+void ocpy(Location*, Unit*);    //Occupy a location with the passed Unit, modify displays of location to reflect
+void unOcpy(Location*);         //Remove Unit from passed location, remove unit from displays as well
 void ptBrdLoc(Location **); //Test if binary file properly read to board structure array
 void ptPlyrs(Unit [], Unit []); //Test if player pieces read in successfully
 
@@ -385,6 +387,40 @@ int stPlyrs(string &plyr1, string &plyr2, bool &plyNPC)
         getline(cin, plyr2);
     }
     return nPlyr;
+}
+void ocpy(Location* loc, Unit* unit)
+{
+    loc->isOcp = true;
+    loc->occUnit = unit;
+    if(unit->plyrID == 1)
+    {
+        if(unit->name == "Field Marshal")
+            for(int i=0; i < 7; i++)
+                loc->dsply1[2][2+i] = unit->name[6+i];
+        else
+            for(int i=0; i < unit->name.length(); i++)
+                loc->dsply1[2][2+1] = unit->name[i];
+        for(int i=0; i < 7; i++)
+            for(int j=0; j < 3; j++)
+                loc->dsply2[2+i][1+j] = '?';
+            
+    }
+    else
+    {
+        if(unit->name == "Field Marshal")
+            for(int i=0; i < 7; i++)
+                loc->dsply2[2][2+i] = unit->name[6+i];
+        else
+            for(int i=0; i < unit->name.length(); i++)
+                loc->dsply2[2][2+1] = unit->name[i];
+        for(int i=0; i < 7; i++)
+            for(int j=0; j < 3; j++)
+                loc->dsply1[2+i][1+j] = '?';
+    }
+}
+void unOcpy(Location* loc)
+{
+    
 }
 void ptBrdLoc(Location **brd)
 {
