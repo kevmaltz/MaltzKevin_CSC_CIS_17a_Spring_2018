@@ -31,8 +31,8 @@ struct Location
 };
 
 //Global Constants - Math, Science, Conversions, 2D Array Sizes
-const short ROW_MX = 13;
-const short COL_MX = 5;
+const short ROW_MX = 5;
+const short COL_MX = 13;
 const int N_PCS = 25;
 const int RM_WD = 5;    //Must be = to the r of Location.dsply[r][c]
 const int RM_HT = 13;   //Must be = to the c of Location.dsply[r][c]
