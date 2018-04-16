@@ -513,38 +513,36 @@ void ocpy(Location* loc, Unit* unit)
     if(unit->plyrID == 1)
     {
         if(unit->name == "Field Marshal")
-            for(int i=0; i < 7; i++)
-                loc->dsply1[2][2+i] = unit->name[6+i];
+            for(int c=0; c < 7; c++)
+                loc->dsply1[2][2+c] = unit->name[6+c];
         else
-            for(int i=0; i < unit->name.length(); i++)
-                loc->dsply1[2][2+1] = unit->name[i];
-        for(int i=0; i < 7; i++)
-            for(int j=0; j < 3; j++)
-                loc->dsply2[2+i][1+j] = '?';
+            for(int c=0; c < unit->name.length(); i++)
+                loc->dsply1[2][2+c] = unit->name[c];
+        for(int c=2; c < RM_CL-2; c++)
+            loc->dsply2[2][c] = '?';
             
     }
     else
     {
         if(unit->name == "Field Marshal")
-            for(int i=0; i < 7; i++)
-                loc->dsply2[2][2+i] = unit->name[6+i];
+            for(int c=0; c < 7; c++)
+                loc->dsply2[2][2+c] = unit->name[6+c];
         else
-            for(int i=0; i < unit->name.length(); i++)
-                loc->dsply2[2][2+1] = unit->name[i];
-        for(int i=0; i < 7; i++)
-            for(int j=0; j < 3; j++)
-                loc->dsply1[2+i][1+j] = '?';
+            for(int c=0; c < unit->name.length(); c++)
+                loc->dsply2[2][2+c] = unit->name[c];
+        for(int c=2; c < RM_CL-2; c++)
+            loc->dsply1[2][c] = '?';
     }
 }
 void unOcpy(Location* loc)
 {
     loc->occUnit = NULL;
     loc->isOcp = false;
-    for(int i=0; i < RM_RW-2; i++)
-        for(int j=0; j < RM_CL-2; j++)
+    for(int r=1; r < RM_RW-1; r++)
+        for(int c=1; c < RM_CL-1; c++)
         {
-            loc->dsply1[1+i][1+j] = ' ';
-            loc->dsply2[1+i][1+j] = ' ';
+            loc->dsply1[r][c] = ' ';
+            loc->dsply2[r][c] = ' ';
         }
         
 }
