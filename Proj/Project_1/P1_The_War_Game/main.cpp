@@ -454,6 +454,7 @@ void setPcs(Location **board, Unit pcs[], string pNme)
             repeat = false;;
             do  //Get and validate location selection. Repeats till location is valid
             {
+                repeat = false;
                 slctR = slctC = -1;
                 cout << "Enter row,column( #,# ) to select a location to place the " 
                      << pcs[mtchInd].name << ": ";
