@@ -516,7 +516,7 @@ void ocpy(Location* loc, Unit* unit)
             for(int c=0; c < 7; c++)
                 loc->dsply1[2][2+c] = unit->name[6+c];
         else
-            for(int c=0; c < unit->name.length(); i++)
+            for(int c=0; c < unit->name.length(); c++)
                 loc->dsply1[2][2+c] = unit->name[c];
         for(int c=2; c < RM_CL-2; c++)
             loc->dsply2[2][c] = '?';
@@ -536,6 +536,7 @@ void ocpy(Location* loc, Unit* unit)
 }
 void unOcpy(Location* loc)
 {
+    loc->occUnit->inPlay = false;
     loc->occUnit = NULL;
     loc->isOcp = false;
     for(int r=1; r < RM_RW-1; r++)
