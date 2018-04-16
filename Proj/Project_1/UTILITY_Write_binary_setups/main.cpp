@@ -23,10 +23,14 @@ struct Location
     char type;      //What type of position is it. (C)amp/(P)ost/(F)rontline/(H)eadquarters/(M)ountain
     bool isOcp;     //If location occupied, set true
     bool isRR;      //Set true if location is on railroad line
+    char dsply1[5][13];
+    char dsply2[5][13];
     Unit *occUnit;  //Pointer to unit occupying the location.
 };
 
 //Global Constants - Math, Science, Conversions, 2D Array Sizes
+const int RM_WD = 5;    //Must be = to the r of Location.dsply[r][c]
+const int RM_HT = 13;   //Must be = to the c of Location.dsply[r][c]
 
 //Function Prototypes
 
@@ -63,6 +67,18 @@ int main(int argc, char** argv)
             tmpBool=="0"?stream[c].isRR = false:stream[c].isRR=true;
         }
         txt.ignore(1000, '\n');
+        //get display data
+        for(int i=0; i < RM_WD; i++)
+        {
+            for(int c=0; c < COL_MX; c++)
+                for(int j=0; j < RM_HT; j++)
+                {
+                    txt.get(stream[c].dsply1[i][j]);
+                    stream[c].dsply2[i][j] = stream[c].dsply1[i][j];
+                }
+            
+            txt.ignore(1000,'\n');
+        }
         for(int c=0; c < COL_MX; c++)
         {
             getline(txt, ptrRaw, '#');
