@@ -34,8 +34,8 @@ struct Location
 const short ROW_MX = 5;
 const short COL_MX = 13;
 const int N_PCS = 25;
-const int RM_WD = 5;    //Must be = to the r of Location.dsply[r][c]
-const int RM_HT = 13;   //Must be = to the c of Location.dsply[r][c]
+const int RM_CL = 13;   //Must be = to the c of Location.dsply[r][c]
+const int RM_RW = 5;    //Must be = to the r of Location.dsply[r][c]
 
 //Function Prototypes
 Location **initBrd(fstream &);  //Initializes the board
@@ -540,8 +540,8 @@ void unOcpy(Location* loc)
 {
     loc->occUnit = NULL;
     loc->isOcp = false;
-    for(int i=0; i < RM_HT-2; i++)
-        for(int j=0; j < RM_WD-2; j++)
+    for(int i=0; i < RM_RW-2; i++)
+        for(int j=0; j < RM_CL-2; j++)
         {
             loc->dsply1[1+i][1+j] = ' ';
             loc->dsply2[1+i][1+j] = ' ';
@@ -564,10 +564,10 @@ void ptBrdLoc(Location **brd)
         for(int c=0; c < COL_MX; c++)
             cout << brd[r][c].occUnit << " ";
         cout << endl;
-        for(int i=0; i < RM_WD; i++)
+        for(int i=0; i < RM_CL; i++)
         {
             for(int c=0; c < COL_MX; c++)
-                for(int j=0; j < RM_HT; j++)
+                for(int j=0; j < RM_RW; j++)
                 {
                     cout << brd[r][c].dsply1[i][j];
                     if(j==12)
