@@ -10,6 +10,7 @@
 #include <string>
 #include <fstream>
 #include <cstdlib>
+#include <iomanip>
 using namespace std;
 
 //User Libraries
@@ -340,6 +341,8 @@ void dspBrd(Location **board, int pID)
 {
     if(pID == 1)
     {
+        cout << right << setw(8) << "C0" << setw(18) << "C1" 
+             << setw(18) << "C2" << setw(18) << "C3" << setw(18) << " C4\n"; 
         for(int bR=ROW_MX-1; bR >= 0; bR--)
         {
             for(int rmR=0; rmR < RM_RW; rmR++)
@@ -371,7 +374,10 @@ void dspBrd(Location **board, int pID)
                             cout << "     ";
                     }
                 }
-                cout << endl;
+                if(rmR == 2)
+                    cout << "  R" << bR<< endl;
+                else
+                    cout << endl;
             }
             switch(bR)
             {
@@ -439,9 +445,13 @@ void dspBrd(Location **board, int pID)
                     
             }
         }
+        cout << right << setw(8) << "C0" << setw(18) << "C1" 
+             << setw(18) << "C2" << setw(18) << "C3" << setw(18) << " C4\n";
     }
     else if(pID == 2)
     {
+        cout << right << setw(8) << "C4" << setw(18) << "C3" 
+             << setw(18) << "C2" << setw(18) << "C1" << setw(18) << " C0\n";
         for(int bR=0; bR < ROW_MX; bR++)
         {
             for(int rmR=0; rmR < RM_RW; rmR++)
@@ -473,7 +483,10 @@ void dspBrd(Location **board, int pID)
                                 cout << "     ";
                         }
                 }
-                cout << endl;
+                if(rmR == 2)
+                    cout << "  R" << bR<< endl;
+                else
+                    cout << endl;
             }
             switch(bR)
             {
@@ -541,6 +554,8 @@ void dspBrd(Location **board, int pID)
 
             }
         }
+        cout << right << setw(8) << "C4" << setw(18) << "C3" 
+             << setw(18) << "C2" << setw(18) << "C1" << setw(18) << " C0\n";
     }
     else
         cout << "ERROR: Cannot display the board.\n";
