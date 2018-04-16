@@ -44,7 +44,8 @@ int stPlyrs(string &, string &, bool &);    //Sets the players and their names, 
 void setPcs(Location **, Unit [], string);
 void ocpy(Location*, Unit*);    //Occupy a location with the passed Unit, modify displays of location to reflect
 void unOcpy(Location*);         //Remove Unit from passed location, remove unit from displays as well
-void ptBrdLoc(Location **); //Test if binary file properly read to board structure array
+void dspBrd(Location **, int);  //Displays the board
+void ptBrdLoc(Location **);     //Test if binary file properly read to board structure array
 void ptPlyrs(Unit [], Unit []); //Test if player pieces read in successfully
 
 //Execution begins here
@@ -78,7 +79,7 @@ int main(int argc, char** argv)
     //Set player(s) and return number of human players
     nPlyr = stPlyrs(plyr1, plyr2, ai);
     //TODO - Display the board, right now with no pieces.
-   
+    
     //player 1 piece setup
     setPcs(board, p1Pcs, plyr1);
             
@@ -334,6 +335,33 @@ void unOcpy(Location* loc)
             loc->dsply1[r][c] = ' ';
             loc->dsply2[r][c] = ' ';
         }
+}
+void dspBrd(Location **board, int pID)
+{
+    if(pID == 1)
+    {
+        for(int bR=ROW_MX-1; bR >= 0; bR--)
+            for(int rmR=0; rmR < RM_RW; rmR++)
+            {
+                for(int bC=0; bC < COL_MX; bC++)
+                    for(int rmC=0; rmC < RM_CL; rmC++)
+                        cout << board[bR][bC].dsply1[rmR][rmC];
+                cout << endl;
+            }
+    }
+    else if(pID == 2)
+    {
+        for(int bR=0; bR < ROW_MX; bR++)
+            for(int rmR=0; rmR < RM_RW; rmR++)
+            {
+                for(int bC=COL_MX-1; bC >= 0; bC--)
+                    for(int rmC=0; rmC < RM_CL; rmC++)
+                        cout << board[bR][bC].dsply1[rmR][rmC];
+                cout << endl;
+            }
+    }
+    else
+        cout << "ERROR: Cannot display the board.\n";
 }
 void ptBrdLoc(Location **brd)
 {
