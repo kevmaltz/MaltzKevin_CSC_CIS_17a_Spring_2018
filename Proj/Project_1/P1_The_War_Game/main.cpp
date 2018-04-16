@@ -67,7 +67,6 @@ int main(int argc, char** argv)
         board = initBrd(setup);
         //Read in data for each piece
         initPcs(setup, p1Pcs, p2Pcs);
-        
         setup.close();
     }
     else    //Return exit failure if setup file fails to open.
@@ -79,22 +78,17 @@ int main(int argc, char** argv)
     //Set player(s) and return number of human players
     nPlyr = stPlyrs(plyr1, plyr2, ai);
     //TODO - Display the board, right now with no pieces.
-    
-    /*SET PIECES ON BOARD*/
-    string slctn;   //piece selection entered by player
-    int mtchInd;    //Index of Unit.name in pxPcs that matches slctn. -1 sentinel value
-    bool allSet;    //Stays true if all pieces have been set on the board
-    int slctR, slctC;   //selected row and column of location to place a piece
-    bool locGd;     //Set true if entered location is valid
-    char rpPc;      //Choice to replace a piece if location is already occupied
-    bool repeat;    //General boolean to use if loops need repeating
-    const int R_MX_P1 = 5;  //Maximum row index player 1 can set pieces at
-    const int R_MN_P2 = 7;  //Minimum row index player 2 can set pieces at
+   
     //player 1 piece setup
-    //setPcs(board, p1Pcs, plyr1);
+    setPcs(board, p1Pcs, plyr1);
             
     //player 2 piece setup
     setPcs(board, p2Pcs, plyr2);
+//TODO - /*FOR AI IMPLEMENTATION*/
+//    if(ai)
+//        aiStPcs(board, p2Pcs);
+//    else
+//        setPcs(board, p2Pcs, plyr2);
     
     
     
