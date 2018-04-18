@@ -47,6 +47,7 @@ void unOcpy(Location*);         //Remove Unit from passed location, remove unit 
 void dspBrd(Location **, int);  //Displays the board
 void combat(Unit *, Location &); //Determines combat results
 bool move(Location **, int, int, int, int);    //Move a piece from one location to another
+string frmtCse(string);         //Formats string to proper noun capitalization
 void ptBrdLoc(Location **);     //Test if binary file properly read to board structure array
 void ptPlyrs(Unit [], Unit []); //Test if player pieces read in successfully
 
@@ -214,13 +215,7 @@ void setPcs(Location **board, Unit pcs[], string pNme)
             getline(cin, slctn);
 
             //Convert string to proper case formatting
-            slctn[0] = toupper(slctn[0]);
-            for(int i=1; i<slctn.length(); i++)
-                slctn[i] = tolower(slctn[i]);
-
-            //Proper capitalization for Field Marshal
-            if(slctn.length() == 13)
-                slctn[6] = toupper(slctn[6]);
+            frmtCse(slctn);
 
             //Check if piece exists and not in play. If valid store index of selected unit
             for(int i=0; i < N_PCS; i++)
@@ -640,6 +635,18 @@ bool move(Location **board, int strtR, int strtC, int desR, int desC)
     //if "Frontline" involved, push them along then follow normal procedure
     //
     
+}
+string frmtCse(string s)
+{
+    s[0] = toupper(s[0]);
+    for(int i=1; i<s.length(); i++)
+        s[i] = tolower(s[i]);
+
+    //Proper capitalization for Field Marshal
+    if(s.length() == 13)
+        s[6] = toupper(s[6]);
+    
+    return s;
 }
 void ptBrdLoc(Location **brd)
 {
