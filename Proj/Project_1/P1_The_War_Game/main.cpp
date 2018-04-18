@@ -45,6 +45,8 @@ void setPcs(Location **, Unit [], string);
 void ocpy(Location*, Unit*);    //Occupy a location with the passed Unit, modify displays of location to reflect
 void unOcpy(Location*);         //Remove Unit from passed location, remove unit from displays as well
 void dspBrd(Location **, int);  //Displays the board
+void combat(Unit *, Location &); //Determines combat results
+bool move(Location **, int, int, int, int);    //Move a piece from one location to another
 void ptBrdLoc(Location **);     //Test if binary file properly read to board structure array
 void ptPlyrs(Unit [], Unit []); //Test if player pieces read in successfully
 
@@ -579,6 +581,65 @@ void dspBrd(Location **board, int pID)
     }
     else
         cout << "ERROR: Cannot display the board.\n";
+}
+void combat(Unit *attckr, Location &loc)
+{
+    if(attckr->priority == 10)
+    {
+        unOcpy(&loc);
+        attckr->inPlay = false;
+    }
+    else if(attckr->name == "Engineers" && loc.occUnit->name == "Landmines")
+    {
+        //Remove Landmines
+        unOcpy(&loc);
+        //Place Engineers at the location
+        ocpy(&loc, attckr);
+    }
+    else
+    {
+        if(attckr->priority > loc.occUnit->priority)
+        {
+            //Defender dies, invasion succeeds
+            unOcpy(&loc);
+            ocpy(&loc, attckr);
+        }
+        else if(attckr->priority < loc.occUnit->priority)
+        {
+            //Attacker dies, invasion fails
+            attckr->inPlay = false;
+        }
+        else if(attckr->priority == loc.occUnit->priority)
+        {
+            //Mutual destruction, location is now empty
+            unOcpy(&loc);
+            attckr->inPlay = false;
+        }
+    }
+}
+bool move(Location **board, int strtR, int strtC, int desR, int desC)
+{
+    // TODO - change function params, let move function handle all validation
+    
+    //Movement needs to ensure the proper pieces are allowed to move. Flag
+    // and landmines cannot move, only RR allow for travel beyond adjacent 
+    //location, and engineers can turn corners on the RR
+    //disallow movements to "Mountains"
+    if(board[strtR][strtC].occUnit->name == "Flag")
+    {
+        cout << "Flag cannot be moved.\n";
+        return false;
+    }
+    else if(board[strtR][strtC].occUnit->name == "Landmines")
+    {
+        cout << "Landmines cannot be moved.\n";
+        return false;
+    }
+    //TODO - Check and manage railroad movements
+    //TODO - check movement, if "Camp" is involved then allow diagonal movement
+    //if "Frontline" involved, push them along then follow normal procedure
+    //
+    
 }
 void ptBrdLoc(Location **brd)
 {
