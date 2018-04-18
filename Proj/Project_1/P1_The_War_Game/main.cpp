@@ -49,6 +49,7 @@ void combat(Unit *, Location &); //Determines combat results
 bool move(Location **, int, int, int, int);    //Move a piece from one location to another
 string frmtCse(string);         //Formats string to proper noun capitalization
 int fndMtch(Unit[], string);                  //Get index of matching unit in array, if exists
+void whoNtSt(Unit[]);           //Lists all pieces not yet in play for a single player
 void ptBrdLoc(Location **);     //Test if binary file properly read to board structure array
 void ptPlyrs(Unit [], Unit []); //Test if player pieces read in successfully
 
@@ -202,11 +203,7 @@ void setPcs(Location **board, Unit pcs[], string pNme)
         mtchInd = -1;
         cout << "Unplaced pieces:\n";
         //Display all pieces not yet in play/set on board
-        for(int i=0; i < N_PCS; i++)
-        {
-            if(pcs[i].inPlay == false)
-                cout << pcs[i].name << endl;
-        }//FIND ME
+        whoNtSt(pcs);
         //Get and validate piece selection by player
         do
         {
@@ -227,7 +224,7 @@ void setPcs(Location **board, Unit pcs[], string pNme)
                 cout << "Invalid selection\n";
                 repeat = true;
             }
-        }while(repeat);
+        }while(repeat);//FIND ME
         
         //Setup pieces on board
         do
@@ -652,6 +649,20 @@ int fndMtch(Unit pcs[], string s)
             }
     }
     return -1;  //Sentinel value for no match returned
+}
+void whoNtSt(Unit pcs[])
+{
+    int perLne = 0;
+    for(int i=0; i < N_PCS; i++)
+    {
+        if(pcs[i].inPlay == false)
+        {
+            cout << pcs[i].name << endl;
+            perLne++;
+            if(0 == (perLne % 5))
+                cout << endl;
+        }
+    }
 }
 void ptBrdLoc(Location **brd)
 {
