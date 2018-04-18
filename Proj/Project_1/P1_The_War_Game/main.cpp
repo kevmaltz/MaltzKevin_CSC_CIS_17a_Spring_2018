@@ -32,9 +32,9 @@ struct Location
 };
 
 //Global Constants - Math, Science, Conversions, 2D Array Sizes
-const short ROW_MX = 13;
-const short COL_MX = 5;
-const int N_PCS = 25;
+const short ROW_MX = 13;//Maximum number of rows on the board
+const short COL_MX = 5; //Maximum number of columns on the board
+const int N_PCS = 25;   //Number of pieces per player
 const int RM_CL = 13;   //Must be = to the c of Location.dsply[r][c]
 const int RM_RW = 5;    //Must be = to the r of Location.dsply[r][c]
 
@@ -52,16 +52,16 @@ void ptPlyrs(Unit [], Unit []); //Test if player pieces read in successfully
 //Execution begins here
 int main(int argc, char** argv) 
 {
-    int nPlyr;
-    string plyr1;
-    string plyr2;
-    bool ai = false;
+    int nPlyr;              //Number of human players
+    string plyr1;           //Name of player 1
+    string plyr2;           //Name of player 2
+    bool ai = false;        //Playing against AI?
     unsigned int turn = 0;  //The current turn number. Increments +1 every turn
     
     fstream setup("setup.dat", ios::in | ios::binary);
-    Location **board;   //13x5 board
-    Unit p1Pcs[N_PCS];
-    Unit p2Pcs[N_PCS];
+    Location **board;   //13x5 game board
+    Unit p1Pcs[N_PCS];  //Holds all of player 1's pieces
+    Unit p2Pcs[N_PCS];  //Holds all of player 2's pieces
     
     if(setup.is_open() && setup.good())
     {
@@ -150,7 +150,7 @@ void initPcs(fstream &setup, Unit p1[], Unit p2[])
 }
 int stPlyrs(string &plyr1, string &plyr2, bool &plyNPC)
 {
-    int nPlyr = 0;
+    int nPlyr = 0;  //Number of human players. Sentinel value of 0
     
     cout << "2 player game or 1 player vs AI available\n";
     cout << "Enter number of players(2 max): ";
@@ -188,21 +188,23 @@ void setPcs(Location **board, Unit pcs[], string pNme)
     bool repeat;    //General boolean to use if loops need repeating
     const int R_MX_P1 = 5;  //Maximum row index player 1 can set pieces at
     const int R_MN_P2 = 7;  //Minimum row index player 2 can set pieces at
-    int id = pcs[0].plyrID;
+    int id = pcs[0].plyrID; //Which player is setting their pieces
     
     cout << endl << endl;
     cout << pNme << " place your pieces on the board.\n";
+    //Begin setup
     do
     {
         allSet = true;
         mtchInd = -1;
         cout << "Unplaced pieces:\n";
+        //Display all pieces not yet in play/set on board
         for(int i=0; i < N_PCS; i++)
         {
             if(pcs[i].inPlay == false)
                 cout << pcs[i].name << endl;
         }
-        
+        //Get and validate piece selection by player
         do
         {
             repeat = false;
@@ -219,18 +221,18 @@ void setPcs(Location **board, Unit pcs[], string pNme)
             if(slctn.length() == 13)
                 slctn[6] = toupper(slctn[6]);
 
-            //Check if piece selection is valid. If valid store index of selected unit
+            //Check if piece exists and not in play. If valid store index of selected unit
             for(int i=0; i < N_PCS; i++)
             {
                 if(pcs[i].inPlay == false)
                     if(pcs[i].name == slctn)
                     {
                         mtchInd = i;
-                        break;
+                        break;  //Stop looking as soon as a matching piece is found
                     }
             }
 
-            //If no valid match found notify player and restart loop from top
+            //If no valid match found notify player and restart piece selection
             if(mtchInd == -1)
             {
                 cout << "Invalid selection\n";
@@ -251,6 +253,7 @@ void setPcs(Location **board, Unit pcs[], string pNme)
                 //TODO - change this to use a stringstream to catch any error in the way user inputs numbers
                 cin >> slctR; cin.ignore(1000,','); 
                 cin >> slctC; cin.ignore(1000,'\n');
+                //Valid row of locations depend on the player ID
                 if(id == 1 && (slctR < 0 || slctR > R_MX_P1))
                 {
                     repeat = true;
@@ -268,7 +271,7 @@ void setPcs(Location **board, Unit pcs[], string pNme)
                 }
             }while(repeat);
             
-            //Check if chosen location is already occupied, decide what to do
+            //Check if chosen location is already occupied, if yes decide what to do
             if(board[slctR][slctC].occUnit != NULL)
             {
                 cout << board[slctR][slctC].occUnit->name
@@ -293,14 +296,19 @@ void setPcs(Location **board, Unit pcs[], string pNme)
         //If any pieces are not yet set in play, allSet=false and loop setup
         for(int i=0; i < N_PCS && allSet; i++)
             if(pcs[i].inPlay == false)
+            {
                 allSet = false;
+                break;  //Stop looking as soon as any unset piece is found
+            }
     }while(!allSet);
 }
 void ocpy(Location* loc, Unit* unit)
 {
+    //Occupy location, place unit at location, set unit as in play
     loc->isOcp = true;
     loc->occUnit = unit;
     unit->inPlay = true;
+    //Depending on owner of unit, configure board display at location for each player
     if(unit->plyrID == 1)
     {
         if(unit->name == "Field Marshal")
@@ -327,9 +335,11 @@ void ocpy(Location* loc, Unit* unit)
 }
 void unOcpy(Location* loc)
 {
+    //Set unit as out of play, remove unit from location, un-occupy location
     loc->occUnit->inPlay = false;
     loc->occUnit = NULL;
     loc->isOcp = false;
+    //Clear board display of location for both players
     for(int r=1; r < RM_RW-1; r++)
         for(int c=1; c < RM_CL-1; c++)
         {
@@ -339,8 +349,10 @@ void unOcpy(Location* loc)
 }
 void dspBrd(Location **board, int pID)
 {
+    //Always display the current players' board half on bottom
     if(pID == 1)
     {
+        //Label the columns for the player, top of board
         cout << right << setw(8) << "C0" << setw(18) << "C1" 
              << setw(18) << "C2" << setw(18) << "C3" << setw(18) << " C4\n"; 
         for(int bR=ROW_MX-1; bR >= 0; bR--)
@@ -353,6 +365,7 @@ void dspBrd(Location **board, int pID)
                         cout << board[bR][bC].dsply1[rmR][rmC];
                     if(bC != (COL_MX-1))
                     {
+                        //Handles the horizontal pathing displayed on the board
                         if(rmR == 2)
                             switch(bR)
                             {
@@ -374,11 +387,13 @@ void dspBrd(Location **board, int pID)
                             cout << "     ";
                     }
                 }
+                //Display row numbers on right of board
                 if(rmR == 2)
                     cout << "  R" << bR<< endl;
                 else
                     cout << endl;
             }
+            //Handle the vertical pathing displayed on the board
             switch(bR)
             {
                 case 12:
@@ -445,11 +460,13 @@ void dspBrd(Location **board, int pID)
                     
             }
         }
+        //Label the columns for the player, bottom of board
         cout << right << setw(8) << "C0" << setw(18) << "C1" 
              << setw(18) << "C2" << setw(18) << "C3" << setw(18) << " C4\n";
     }
     else if(pID == 2)
     {
+        //Label the columns for the player, top of board
         cout << right << setw(8) << "C4" << setw(18) << "C3" 
              << setw(18) << "C2" << setw(18) << "C1" << setw(18) << " C0\n";
         for(int bR=0; bR < ROW_MX; bR++)
@@ -462,6 +479,7 @@ void dspBrd(Location **board, int pID)
                         cout << board[bR][bC].dsply2[rmR][rmC];
                     if(bC != 0)
                         {
+                        //Handles the horizontal pathing displayed on the board
                             if(rmR == 2)
                                 switch(bR)
                                 {
@@ -483,11 +501,13 @@ void dspBrd(Location **board, int pID)
                                 cout << "     ";
                         }
                 }
+                //Display row numbers on right of board
                 if(rmR == 2)
                     cout << "  R" << bR<< endl;
                 else
                     cout << endl;
             }
+            //Handles the vertical pathing displayed on the board
             switch(bR)
             {
                 case 0:
@@ -554,6 +574,7 @@ void dspBrd(Location **board, int pID)
 
             }
         }
+        //Label the columns for the player, bottom of board
         cout << right << setw(8) << "C4" << setw(18) << "C3" 
              << setw(18) << "C2" << setw(18) << "C1" << setw(18) << " C0\n";
     }
