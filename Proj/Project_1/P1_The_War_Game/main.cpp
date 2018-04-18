@@ -48,6 +48,7 @@ void dspBrd(Location **, int);  //Displays the board
 void combat(Unit *, Location &); //Determines combat results
 bool move(Location **, int, int, int, int);    //Move a piece from one location to another
 string frmtCse(string);         //Formats string to proper noun capitalization
+int fndMtch(Unit[], string);                  //Get index of matching unit in array, if exists
 void ptBrdLoc(Location **);     //Test if binary file properly read to board structure array
 void ptPlyrs(Unit [], Unit []); //Test if player pieces read in successfully
 
@@ -205,7 +206,7 @@ void setPcs(Location **board, Unit pcs[], string pNme)
         {
             if(pcs[i].inPlay == false)
                 cout << pcs[i].name << endl;
-        }
+        }//FIND ME
         //Get and validate piece selection by player
         do
         {
@@ -218,15 +219,7 @@ void setPcs(Location **board, Unit pcs[], string pNme)
             frmtCse(slctn);
 
             //Check if piece exists and not in play. If valid store index of selected unit
-            for(int i=0; i < N_PCS; i++)
-            {
-                if(pcs[i].inPlay == false)
-                    if(pcs[i].name == slctn)
-                    {
-                        mtchInd = i;
-                        break;  //Stop looking as soon as a matching piece is found
-                    }
-            }
+            mtchInd = fndMtch(pcs, slctn);
 
             //If no valid match found notify player and restart piece selection
             if(mtchInd == -1)
@@ -647,6 +640,18 @@ string frmtCse(string s)
         s[6] = toupper(s[6]);
     
     return s;
+}
+int fndMtch(Unit pcs[], string s)
+{
+    for(int i=0; i < N_PCS; i++)
+    {
+        if(pcs[i].inPlay == false)
+            if(pcs[i].name == s)
+            {
+                return i; //return value as soon as a match is found
+            }
+    }
+    return -1;  //Sentinel value for no match returned
 }
 void ptBrdLoc(Location **brd)
 {
