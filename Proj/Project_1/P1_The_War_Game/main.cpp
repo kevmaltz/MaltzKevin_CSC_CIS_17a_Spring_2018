@@ -6,11 +6,11 @@
  */
 
 //System Libraries
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <cstdlib>
-#include <iomanip>
+#include <iostream> //Basic user input/output
+#include <string>   //Unit/Location/player names
+#include <fstream>  //Read & Write to text and binary files for setup and restart
+//#include <cstdlib>
+#include <iomanip>  //Used for formatting the board display
 using namespace std;
 
 //User Libraries
