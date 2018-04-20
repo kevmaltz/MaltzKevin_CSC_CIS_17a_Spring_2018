@@ -559,7 +559,7 @@ bool move(Location **board, int strtR, int strtC, int desR, int desC, Unit *unit
     //location, and engineers can turn corners on the RR
     //disallow movements to "Mountains"
     if(unit->name == "Flag" || unit->name == "Landmines"){
-        cout << unit.name << " cannot be moved.\n";
+        cout << unit->name << " cannot be moved.\n";
         return false;
     }
     //TODO - Check and manage railroad movements
