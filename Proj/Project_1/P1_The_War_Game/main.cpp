@@ -13,15 +13,13 @@
 using namespace std;
 
 //User Libraries
-struct Unit
-{
+struct Unit{
     unsigned short priority;  //The value representing its position on the attack hierarchy, higher is better
     bool inPlay;    //If unit is still in play, set true. When unit leaves play, set false.
     string name;    //Name of piece
     int plyrID;     //ID of player who owns the unit.( ID = 1 or ID = 2 )
 };
-struct Location
-{
+struct Location{
     char type;      //What type of position is it. Camp/Battlefield/Frontline/Headquarters/Mountain
     bool isOcp;     //If location occupied, set true
     bool isRR;      //Set true if location is on railroad line
@@ -46,7 +44,7 @@ void ocpy(Location*, Unit*);    //Occupy a location with the passed Unit, modify
 void unOcpy(Location*);         //Remove Unit from passed location, remove unit from displays as well
 void dspBrd(Location **, int);  //Displays the board
 void combat(Unit *, Location &); //Determines combat results
-bool move(Location **, int, int, int, int);    //Move a piece from one location to another
+bool move(Location **, int, int, int, int, Unit *);    //Move a piece from one location to another
 string frmtCse(string);         //Formats string to proper noun capitalization
 int fndMtch(Unit[], string);                  //Get index of matching unit in array, if exists
 void whoNtSt(Unit[]);           //Lists all pieces not yet in play for a single player
@@ -67,16 +65,14 @@ int main(int argc, char** argv)
     Unit p1Pcs[N_PCS];  //Holds all of player 1's pieces
     Unit p2Pcs[N_PCS];  //Holds all of player 2's pieces
     
-    if(setup.is_open() && setup.good())
-    {
+    if(setup.is_open() && setup.good()){
         //Read in data for every location on the board
         board = initBrd(setup);
         //Read in data for each piece
         initPcs(setup, p1Pcs, p2Pcs);
         setup.close();
     }
-    else    //Return exit failure if setup file fails to open.
-    {
+    else{   //Return exit failure if setup file fails to open.
         cout << "ERROR: unable to open file Setut.dat, exiting program\n";
         return EXIT_FAILURE;
     }
@@ -109,15 +105,13 @@ int main(int argc, char** argv)
     return EXIT_SUCCESS;
 }
 
-Location **initBrd(fstream &setup)
-{
+Location **initBrd(fstream &setup){
     Location **board;
     board = new Location*[ROW_MX];
-    for(int r=0; r < ROW_MX; r++)
-    {
+    for(int r=0; r < ROW_MX; r++){
         board[r] = new Location[COL_MX];
-        for(int c=0; c < COL_MX; c++)
-        {   //Read in binary data to a location structure
+        for(int c=0; c < COL_MX; c++){   
+            //Read in binary data to a location structure
             setup.read(reinterpret_cast<char *>(board[r]+c), sizeof(board[r][c]));
             //Ensure all Unit* set to NULL. Ensures no bad memory read in from file
             board[r][c].occUnit = NULL;
@@ -125,12 +119,10 @@ Location **initBrd(fstream &setup)
     }
     return board;
 }
-void initPcs(fstream &setup, Unit p1[], Unit p2[])
-{
+void initPcs(fstream &setup, Unit p1[], Unit p2[]){
     int nmLngth;    //Length of string to be read in from binary, minus the null
     char* buf;      //Buffer for reading in a string from the binary file
-    for(int i=0; i < N_PCS; i++)
-        {
+    for(int i=0; i < N_PCS; i++){
             setup.read(reinterpret_cast<char*>(&nmLngth), sizeof(nmLngth));
             setup.read(reinterpret_cast<char*>(&(p1[i].priority)), sizeof(p1[i].priority));
             setup.read(reinterpret_cast<char*>(&(p1[i].inPlay)), sizeof(p1[i].inPlay));
@@ -152,29 +144,25 @@ void initPcs(fstream &setup, Unit p1[], Unit p2[])
             delete [] buf;
         }
 }
-int stPlyrs(string &plyr1, string &plyr2, bool &plyNPC)
-{
+int stPlyrs(string &plyr1, string &plyr2, bool &plyNPC){
     int nPlyr = 0;  //Number of human players. Sentinel value of 0
     
     cout << "2 player game or 1 player vs AI available\n";
     cout << "Enter number of players(2 max): ";
     cin >> nPlyr;
     cin.ignore(1000, '\n');
-    while(nPlyr != 1 && nPlyr != 2)
-    {
+    while(nPlyr != 1 && nPlyr != 2){
         cout << "Invalid number of player. Re-enter(max 2): ";
         cin >> nPlyr;
         cin.ignore(1000, '\n');
     }
-    if(nPlyr == 1)
-    {
+    if(nPlyr == 1){
         cout << "Enter player name: ";
         getline(cin, plyr1);
         plyr2 = "NPC";
         plyNPC = true;
     }
-    if(nPlyr == 2)
-    {
+    if(nPlyr == 2){
         cout << "Enter player 1's name: ";
         getline(cin, plyr1);
         cout << "Enter player 2's name: ";
@@ -182,8 +170,7 @@ int stPlyrs(string &plyr1, string &plyr2, bool &plyNPC)
     }
     return nPlyr;
 }
-void setPcs(Location **board, Unit pcs[], string pNme)
-{
+void setPcs(Location **board, Unit pcs[], string pNme){
     string slctn;   //piece selection entered by player
     int mtchInd;    //Index of Unit.name in pxPcs that matches slctn. -1 sentinel value
     bool allSet;    //Stays true if all pieces have been set on the board
@@ -197,16 +184,14 @@ void setPcs(Location **board, Unit pcs[], string pNme)
     cout << endl << endl;
     cout << pNme << " place your pieces on the board.\n";
     //Begin setup
-    do
-    {
+    do{
         allSet = true;
         mtchInd = -1;
         cout << "Unplaced pieces:\n";
         //Display all pieces not yet in play/set on board
         whoNtSt(pcs);
         //Get and validate piece selection by player
-        do
-        {
+        do{
             repeat = false;
             //Prompt for choice of piece
             cout << pNme << " select a piece by typing in the name: ";
@@ -219,19 +204,16 @@ void setPcs(Location **board, Unit pcs[], string pNme)
             mtchInd = fndMtch(pcs, slctn);
 
             //If no valid match found notify player and restart piece selection
-            if(mtchInd == -1)
-            {
+            if(mtchInd == -1){
                 cout << "Invalid selection\n";
                 repeat = true;
             }
         }while(repeat);//FIND ME
         
         //Setup pieces on board
-        do
-        {
+        do{
             repeat = false;;
-            do  //Get and validate location selection. Repeats till location is valid
-            {
+            do{ //Get and validate location selection. Repeats till location is valid
                 repeat = false;
                 slctR = slctC = -1;
                 cout << "Enter row,column( #,# ) to select a location to place the " 
@@ -240,26 +222,22 @@ void setPcs(Location **board, Unit pcs[], string pNme)
                 cin >> slctR; cin.ignore(1000,','); 
                 cin >> slctC; cin.ignore(1000,'\n');
                 //Valid row of locations depend on the player ID
-                if(id == 1 && (slctR < 0 || slctR > R_MX_P1))
-                {
+                if(id == 1 && (slctR < 0 || slctR > R_MX_P1)){
                     repeat = true;
                     cout << "Invalid location\n";
                 }
-                else if(id == 2 && (slctR < R_MN_P2 || slctR >= ROW_MX))
-                {
+                else if(id == 2 && (slctR < R_MN_P2 || slctR >= ROW_MX)){
                     repeat = true;
                     cout << "Invalid location\n";
                 }
-                else if(slctC < 0 || slctC >= COL_MX)
-                {
+                else if(slctC < 0 || slctC >= COL_MX){
                     repeat = true;
                     cout << "Invalid location\n";
                 }
             }while(repeat);
             
             //Check if chosen location is already occupied, if yes decide what to do
-            if(board[slctR][slctC].occUnit != NULL)
-            {
+            if(board[slctR][slctC].occUnit != NULL){
                 cout << board[slctR][slctC].occUnit->name
                      << " is already at that location.\nDo you wish to replace it with "
                      << pcs[mtchInd].name << "? Enter Y or N: ";
@@ -270,8 +248,7 @@ void setPcs(Location **board, Unit pcs[], string pNme)
                     repeat = true;
                 else if(rpPc == 'y' || rpPc == 'Y')
                     unOcpy(&board[slctR][slctC]);
-                else
-                {
+                else{
                     cout << "Invalid entry. Replacing piece anyways.\n";
                     unOcpy(&board[slctR][slctC]);
                 }
@@ -281,22 +258,19 @@ void setPcs(Location **board, Unit pcs[], string pNme)
         
         //If any pieces are not yet set in play, allSet=false and loop setup
         for(int i=0; i < N_PCS && allSet; i++)
-            if(pcs[i].inPlay == false)
-            {
+            if(pcs[i].inPlay == false){
                 allSet = false;
                 break;  //Stop looking as soon as any unset piece is found
             }
     }while(!allSet);
 }
-void ocpy(Location* loc, Unit* unit)
-{
+void ocpy(Location* loc, Unit* unit){
     //Occupy location, place unit at location, set unit as in play
     loc->isOcp = true;
     loc->occUnit = unit;
     unit->inPlay = true;
     //Depending on owner of unit, configure board display at location for each player
-    if(unit->plyrID == 1)
-    {
+    if(unit->plyrID == 1){
         if(unit->name == "Field Marshal")
             for(int c=0; c < 7; c++)
                 loc->dsply1[2][2+c] = unit->name[6+c];
@@ -307,8 +281,7 @@ void ocpy(Location* loc, Unit* unit)
             loc->dsply2[2][c] = '?';
             
     }
-    else
-    {
+    else{
         if(unit->name == "Field Marshal")
             for(int c=0; c < 7; c++)
                 loc->dsply2[2][2+c] = unit->name[6+c];
@@ -319,42 +292,33 @@ void ocpy(Location* loc, Unit* unit)
             loc->dsply1[2][c] = '?';
     }
 }
-void unOcpy(Location* loc)
-{
+void unOcpy(Location* loc){
     //Set unit as out of play, remove unit from location, un-occupy location
     loc->occUnit->inPlay = false;
     loc->occUnit = NULL;
     loc->isOcp = false;
     //Clear board display of location for both players
     for(int r=1; r < RM_RW-1; r++)
-        for(int c=1; c < RM_CL-1; c++)
-        {
+        for(int c=1; c < RM_CL-1; c++){
             loc->dsply1[r][c] = ' ';
             loc->dsply2[r][c] = ' ';
         }
 }
-void dspBrd(Location **board, int pID)
-{
+void dspBrd(Location **board, int pID){
     //Always display the current players' board half on bottom
-    if(pID == 1)
-    {
+    if(pID == 1){
         //Label the columns for the player, top of board
         cout << right << setw(8) << "C0" << setw(18) << "C1" 
              << setw(18) << "C2" << setw(18) << "C3" << setw(18) << " C4\n"; 
-        for(int bR=ROW_MX-1; bR >= 0; bR--)
-        {
-            for(int rmR=0; rmR < RM_RW; rmR++)
-            {
-                for(int bC=0; bC < COL_MX; bC++)
-                {
+        for(int bR=ROW_MX-1; bR >= 0; bR--){
+            for(int rmR=0; rmR < RM_RW; rmR++){
+                for(int bC=0; bC < COL_MX; bC++){
                     for(int rmC=0; rmC < RM_CL; rmC++)
                         cout << board[bR][bC].dsply1[rmR][rmC];
-                    if(bC != (COL_MX-1))
-                    {
+                    if(bC != (COL_MX-1)){
                         //Handles the horizontal pathing displayed on the board
                         if(rmR == 2)
-                            switch(bR)
-                            {
+                            switch(bR){
                                 case 12: cout << "-----"; break;
                                 case 11: cout << "=|=|="; break;
                                 case 10: cout << "-----"; break;
@@ -380,8 +344,7 @@ void dspBrd(Location **board, int pID)
                     cout << endl;
             }
             //Handle the vertical pathing displayed on the board
-            switch(bR)
-            {
+            switch(bR){
                 case 12:
                     cout << "      |                 |                 |                 |                 |\n";
                     cout << "      |                 |                 |                 |                 |\n";
@@ -450,25 +413,19 @@ void dspBrd(Location **board, int pID)
         cout << right << setw(8) << "C0" << setw(18) << "C1" 
              << setw(18) << "C2" << setw(18) << "C3" << setw(18) << " C4\n";
     }
-    else if(pID == 2)
-    {
+    else if(pID == 2){
         //Label the columns for the player, top of board
         cout << right << setw(8) << "C4" << setw(18) << "C3" 
              << setw(18) << "C2" << setw(18) << "C1" << setw(18) << " C0\n";
-        for(int bR=0; bR < ROW_MX; bR++)
-        {
-            for(int rmR=0; rmR < RM_RW; rmR++)
-            {
-                for(int bC=COL_MX-1; bC >= 0; bC--)
-                {
+        for(int bR=0; bR < ROW_MX; bR++){
+            for(int rmR=0; rmR < RM_RW; rmR++){
+                for(int bC=COL_MX-1; bC >= 0; bC--){
                     for(int rmC=0; rmC < RM_CL; rmC++)
                         cout << board[bR][bC].dsply2[rmR][rmC];
-                    if(bC != 0)
-                        {
+                    if(bC != 0){
                         //Handles the horizontal pathing displayed on the board
                             if(rmR == 2)
-                                switch(bR)
-                                {
+                                switch(bR){
                                     case 12: cout << "-----"; break;
                                     case 11: cout << "=|=|="; break;
                                     case 10: cout << "-----"; break;
@@ -494,8 +451,7 @@ void dspBrd(Location **board, int pID)
                     cout << endl;
             }
             //Handles the vertical pathing displayed on the board
-            switch(bR)
-            {
+            switch(bR){
                 case 0:
                     cout << "      |                 |                 |                 |                 |\n";
                     cout << "      |                 |                 |                 |                 |\n";
@@ -567,67 +523,71 @@ void dspBrd(Location **board, int pID)
     else
         cout << "ERROR: Cannot display the board.\n";
 }
-void combat(Unit *attckr, Location &loc)
-{
-    if(attckr->priority == 10)
-    {
+void combat(Unit *attckr, Location &loc){
+    if(attckr->priority == 10){
         unOcpy(&loc);
         attckr->inPlay = false;
     }
-    else if(attckr->name == "Engineers" && loc.occUnit->name == "Landmines")
-    {
+    else if(attckr->name == "Engineers" && loc.occUnit->name == "Landmines"){
         //Remove Landmines
         unOcpy(&loc);
         //Place Engineers at the location
         ocpy(&loc, attckr);
     }
-    else
-    {
-        if(attckr->priority > loc.occUnit->priority)
-        {
+    else{
+        if(attckr->priority > loc.occUnit->priority){
             //Defender dies, invasion succeeds
             unOcpy(&loc);
             ocpy(&loc, attckr);
         }
-        else if(attckr->priority < loc.occUnit->priority)
-        {
+        else if(attckr->priority < loc.occUnit->priority){
             //Attacker dies, invasion fails
             attckr->inPlay = false;
         }
-        else if(attckr->priority == loc.occUnit->priority)
-        {
+        else if(attckr->priority == loc.occUnit->priority){
             //Mutual destruction, location is now empty
             unOcpy(&loc);
             attckr->inPlay = false;
         }
     }
 }
-bool move(Location **board, int strtR, int strtC, int desR, int desC)
-{
+bool move(Location **board, int strtR, int strtC, int desR, int desC, Unit *unit){
     // TODO - change function params, let move function handle all validation
     
     //Movement needs to ensure the proper pieces are allowed to move. Flag
     // and landmines cannot move, only RR allow for travel beyond adjacent 
     //location, and engineers can turn corners on the RR
     //disallow movements to "Mountains"
-    if(board[strtR][strtC].occUnit->name == "Flag")
-    {
-        cout << "Flag cannot be moved.\n";
-        return false;
-    }
-    else if(board[strtR][strtC].occUnit->name == "Landmines")
-    {
-        cout << "Landmines cannot be moved.\n";
+    if(unit->name == "Flag" || unit->name == "Landmines"){
+        cout << unit.name << " cannot be moved.\n";
         return false;
     }
     //TODO - Check and manage railroad movements
     //TODO - check movement, if "Camp" is involved then allow diagonal movement
-    //if "Frontline" involved, push them along then follow normal procedure
-    //
+    int dspR = strtR - desR;
+    if(dspR < 0)
+        dspR *= -1;
+    int dspC = strtC - desC;
+    if(dspC < 0)
+        dspC *= -1;
     
+    int id = unit->plyrID;
+    if(dspR == 1 && dspC == 1)
+        if(board[desR][desC].type == 'C')
+            if(board[desR][desC].isOcp)
+                if(board[desR][desC].occUnit->plyrID != id)
+                    combat(unit, board[desR][desC]);
+                else{
+                    cout << "Invalid move\n";
+                    return false;
+                }
+            else{
+                unOcpy(&board[strtR][strtC]);
+                ocpy(&board[desR][desC], unit);
+            }
+    //TODO - if "Frontline" involved, push them along then follow normal procedure   
 }
-string frmtCse(string s)
-{
+string frmtCse(string s){
     s[0] = toupper(s[0]);
     for(int i=1; i<s.length(); i++)
         s[i] = tolower(s[i]);
@@ -638,25 +598,18 @@ string frmtCse(string s)
     
     return s;
 }
-int fndMtch(Unit pcs[], string s)
-{
-    for(int i=0; i < N_PCS; i++)
-    {
+int fndMtch(Unit pcs[], string s){
+    for(int i=0; i < N_PCS; i++){
         if(pcs[i].inPlay == false)
             if(pcs[i].name == s)
-            {
                 return i; //return value as soon as a match is found
-            }
     }
-    return -1;  //Sentinel value for no match returned
+    return -1;  //Flag for no match found
 }
-void whoNtSt(Unit pcs[])
-{
+void whoNtSt(Unit pcs[]){
     int perLne = 0;
-    for(int i=0; i < N_PCS; i++)
-    {
-        if(pcs[i].inPlay == false)
-        {
+    for(int i=0; i < N_PCS; i++){
+        if(pcs[i].inPlay == false){
             cout << pcs[i].name << endl;
             perLne++;
             if(0 == (perLne % 5))
@@ -664,10 +617,8 @@ void whoNtSt(Unit pcs[])
         }
     }
 }
-void ptBrdLoc(Location **brd)
-{
-    for(int r=0; r < ROW_MX; r++)
-    {
+void ptBrdLoc(Location **brd){
+    for(int r=0; r < ROW_MX; r++){
         for(int c=0; c < COL_MX; c++)
             cout << brd[r][c].type << " ";
         cout << endl;
@@ -680,11 +631,9 @@ void ptBrdLoc(Location **brd)
         for(int c=0; c < COL_MX; c++)
             cout << brd[r][c].occUnit << " ";
         cout << endl;
-        for(int i=0; i < RM_CL; i++)
-        {
+        for(int i=0; i < RM_CL; i++){
             for(int c=0; c < COL_MX; c++)
-                for(int j=0; j < RM_RW; j++)
-                {
+                for(int j=0; j < RM_RW; j++){
                     cout << brd[r][c].dsply1[i][j];
                     if(j==12)
                         cout << "     ";
@@ -693,10 +642,8 @@ void ptBrdLoc(Location **brd)
         }
     }
 }
-void ptPlyrs(Unit p1[], Unit p2[])
-{
-    for(int i=0; i < N_PCS; i++)
-    {
+void ptPlyrs(Unit p1[], Unit p2[]){
+    for(int i=0; i < N_PCS; i++){
         cout << "P1: " << p1[i].priority << " " << p1[i].inPlay << " " << p1[i].name << endl;
         cout << "P2: " << p2[i].priority << " " << p2[i].inPlay << " " << p2[i].name << endl;
     }
