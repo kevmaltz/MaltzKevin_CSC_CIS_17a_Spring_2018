@@ -43,6 +43,7 @@ void setPcs(Location **, Unit [], string);
 void ocpy(Location*, Unit*);    //Occupy a location with the passed Unit, modify displays of location to reflect
 void unOcpy(Location*);         //Remove Unit from passed location, remove unit from displays as well
 void dspBrd(Location **, int);  //Displays the board
+bool mveVld(Location **, int, int, int, int, Unit *)
 void combat(Unit *, Location &); //Determines combat results
 bool move(Location **, int, int, int, int, Unit *);    //Move a piece from one location to another
 string frmtCse(string);         //Formats string to proper noun capitalization
@@ -551,7 +552,32 @@ void combat(Unit *attckr, Location &loc){
         }
     }
 }
+bool mveVld(Location **board, int strtR, int strtC, int desR, int desC, Unit *unit){
+    bool vldMve = false;        //True for a valid movement, false if not
+    int id = unit->plyrID;
+    int dspR = strtR - desR;    //Absolute Row displacement of unit
+    int dspC = strtC - desC;    //Absolute Column displacement of unit
+    //Take the absolute value of the displacement
+    if(dspR < 0)
+        dspR *= -1;
+    if(dspC < 0)
+        dspC *= -1;
+    //Ensure unit type is allowed movement
+    if(unit->name == "Flag" || unit->name == "Landmines"){
+        cout << unit->name << " cannot ever be moved.\n";
+        return false;
+    }
+    if((dspR > 1 || dspC > 1) && board[strtR][strtC].isRR)
+        //TODO - Finish this line and actually make the isRRopn function
+        isRRopn(board, strtR, strtC)
+    if(dspR == 1 && dspC == 1)
+        if(board[strtR][strtC].type == 'C' || board[desR][desC].type == 'C')
+            if(board[desR][desC].isOcp && board[desR][desC].occUnit->plyrID != id)
+                vldMve = true;
+    
+}
 bool move(Location **board, int strtR, int strtC, int desR, int desC, Unit *unit){
+    bool moved = true;
     // TODO - change function params, let move function handle all validation
     
     //Movement needs to ensure the proper pieces are allowed to move. Flag
@@ -573,18 +599,22 @@ bool move(Location **board, int strtR, int strtC, int desR, int desC, Unit *unit
     
     int id = unit->plyrID;
     if(dspR == 1 && dspC == 1)
-        if(board[desR][desC].type == 'C')
+        if(board[strtR][strtC].type == 'C' || board[desR][desC].type == 'C')
             if(board[desR][desC].isOcp)
                 if(board[desR][desC].occUnit->plyrID != id)
                     combat(unit, board[desR][desC]);
                 else{
                     cout << "Invalid move\n";
-                    return false;
+                    moved = false;
                 }
             else{
                 unOcpy(&board[strtR][strtC]);
                 ocpy(&board[desR][desC], unit);
             }
+        else{
+            cout << "Invalid move\n";
+            moved = false;
+        }
     //TODO - if "Frontline" involved, push them along then follow normal procedure   
 }
 string frmtCse(string s){
