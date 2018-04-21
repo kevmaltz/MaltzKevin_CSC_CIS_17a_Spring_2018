@@ -43,7 +43,8 @@ void setPcs(Location **, Unit [], string);
 void ocpy(Location*, Unit*);    //Occupy a location with the passed Unit, modify displays of location to reflect
 void unOcpy(Location*);         //Remove Unit from passed location, remove unit from displays as well
 void dspBrd(Location **, int);  //Displays the board
-bool mveVld(Location **, int, int, int, int, Unit *)
+bool mveVld(Location **, int, int, int, int, Unit *);
+bool isRRopn(Location **, int, int, int, char);
 void combat(Unit *, Location &); //Determines combat results
 bool move(Location **, int, int, int, int, Unit *);    //Move a piece from one location to another
 string frmtCse(string);         //Formats string to proper noun capitalization
@@ -51,6 +52,10 @@ int fndMtch(Unit[], string);                  //Get index of matching unit in ar
 void whoNtSt(Unit[]);           //Lists all pieces not yet in play for a single player
 void ptBrdLoc(Location **);     //Test if binary file properly read to board structure array
 void ptPlyrs(Unit [], Unit []); //Test if player pieces read in successfully
+
+//Inlined functions
+inline bool XOR(int lh, int rh){return (!(lh && rh)) && (lh || rh);}
+inline bool XOR(bool lh, bool rh){return (!(lh && rh)) && (lh || rh);}
 
 //Execution begins here
 int main(int argc, char** argv) 
@@ -526,6 +531,7 @@ void dspBrd(Location **board, int pID){
 }
 void combat(Unit *attckr, Location &loc){
     if(attckr->priority == 10){
+        //Bomb blows up, so do you!
         unOcpy(&loc);
         attckr->inPlay = false;
     }
@@ -552,33 +558,93 @@ void combat(Unit *attckr, Location &loc){
         }
     }
 }
-bool mveVld(Location **board, int strtR, int strtC, int desR, int desC, Unit *unit){
-    bool vldMve = false;        //True for a valid movement, false if not
-    int id = unit->plyrID;
-    int dspR = strtR - desR;    //Absolute Row displacement of unit
-    int dspC = strtC - desC;    //Absolute Column displacement of unit
+bool mveVld(Location **board, int strtR, int strtC, int desR, int desC, int id){
+    bool vld = true;        //True by default, set false if invalid move found
+    int dspR = strtR - desR;//Absolute Row displacement of unit
+    int dspC = strtC - desC;//Absolute Column displacement of unit
     //Take the absolute value of the displacement
     if(dspR < 0)
         dspR *= -1;
     if(dspC < 0)
         dspC *= -1;
-    //Ensure unit type is allowed movement
-    if(unit->name == "Flag" || unit->name == "Landmines"){
-        cout << unit->name << " cannot ever be moved.\n";
-        return false;
+    //Check if both starting location and destination are on the board
+    if(strtR<0 || strtC<0 || desR<0 || desC<0)
+        vld = false;
+    else if(strtR >= ROW_MX || strtC >= COL_MX || desR >= ROW_MX || desC >= COL_MX)
+        vld = false;
+    //Check if Frontline or Mountains were selected as destination
+    else if(board[desR][desC].type == 'M' || board[desR][desC].type == 'F')
+        vld = false;
+    //Check if location is occupied that it is not players own unit
+    else if(board[desR][desC].isOcp && board[desR][desC].occUnit->plyrID == id)
+        vld = false;
+    //If move is <1,1> then make sure a Camp location is invloved
+    else if(dspR == 1 && dspC == 1){
+        if(board[strtR][strtC].type != 'C' && board[desR][desC].type != 'C')
+            vld = false;
     }
-    if((dspR > 1 || dspC > 1) && board[strtR][strtC].isRR)
-        //TODO - Finish this line and actually make the isRRopn function
-        isRRopn(board, strtR, strtC)
-    if(dspR == 1 && dspC == 1)
-        if(board[strtR][strtC].type == 'C' || board[desR][desC].type == 'C')
-            if(board[desR][desC].isOcp && board[desR][desC].occUnit->plyrID != id)
-                vldMve = true;
-    
+    else if(dspR > 1 && dspC > 1)    //TODO - place the engineer exception in here later
+        vld = false;
+    else if(XOR(dspR > 1, dspC > 1) && board[strtR][strtC].isRR){
+        if(!board[desR][desC].isRR)
+            vld = false;
+        else if(dspR > 1)
+            vld = isRRopn(board, strtR, strtC, desR, 'r');
+        else
+            vld = isRRopn(board, strtR, strtC, desC, 'c');
+    }
+    return vld;
+}
+bool isRRopn(Location **board, int initR, int initC, int dest, char drctn)
+{
+    bool rrOpn = true;
+    if(drctn == 'c'){
+        if(dest - initC > 0){
+            for(int c=initC+1; c < dest && rrOpn; c++)
+                if(board[initR][c].isOcp || !board[initR][c].isRR)
+                    rrOpn = false;
+        }
+        else if(dest - initC < 0)
+            for(int c=initC-1; c > dest && rrOpn; c--)
+                if(board[initR][c].isOcp || !board[initR][c].isRR)
+                    rrOpn = false;
+    }
+    else if(drctn == 'r'){
+        if(dest - initR > 0){
+            for(int r=initR+1; r < dest && rrOpn; r++)
+                if(board[r][initC].isOcp || !board[r][initC].isRR)
+                    rrOpn = false;
+        }
+        else if(dest - initR < 0)
+            for(int r=initR-1; r > dest && rrOpn; r--)
+                if(board[r][initC].isOcp || !board[r][initC].isRR)
+                    rrOpn = false;
+    }
+    return rrOpn;
 }
 bool move(Location **board, int strtR, int strtC, int desR, int desC, Unit *unit){
-    bool moved = true;
+    bool moved;
+    int strtR, strtC;   //(R,C) of starting position
+    int desR, desC;     //(R,C) of destination position
+    Unit *unit;
     // TODO - change function params, let move function handle all validation
+    
+    //check if valid move first with mveVld()
+    do{
+        mveVld(board, )
+        if(unit->name == "Flag" || unit->name == "Landmines"){
+            cout << unit->name << " cannot ever be moved.\n";
+            moved = false;
+        } 
+    }while(!moved);
+        //Ensure unit type is allowed movement
+        //if(unit->name == "Flag" || unit->name == "Landmines"){
+        //    cout << unit->name << " cannot ever be moved.\n";
+        //    return false;
+        //}
+    //Then check if combat needed
+    //If combat, execute combat routine, if not then just ocpy routine
+    //End move
     
     //Movement needs to ensure the proper pieces are allowed to move. Flag
     // and landmines cannot move, only RR allow for travel beyond adjacent 
@@ -590,31 +656,31 @@ bool move(Location **board, int strtR, int strtC, int desR, int desC, Unit *unit
     }
     //TODO - Check and manage railroad movements
     //TODO - check movement, if "Camp" is involved then allow diagonal movement
-    int dspR = strtR - desR;
-    if(dspR < 0)
-        dspR *= -1;
-    int dspC = strtC - desC;
-    if(dspC < 0)
-        dspC *= -1;
-    
-    int id = unit->plyrID;
-    if(dspR == 1 && dspC == 1)
-        if(board[strtR][strtC].type == 'C' || board[desR][desC].type == 'C')
-            if(board[desR][desC].isOcp)
-                if(board[desR][desC].occUnit->plyrID != id)
-                    combat(unit, board[desR][desC]);
-                else{
-                    cout << "Invalid move\n";
-                    moved = false;
-                }
-            else{
-                unOcpy(&board[strtR][strtC]);
-                ocpy(&board[desR][desC], unit);
-            }
-        else{
-            cout << "Invalid move\n";
-            moved = false;
-        }
+//    int dspR = strtR - desR;
+//    if(dspR < 0)
+//        dspR *= -1;
+//    int dspC = strtC - desC;
+//    if(dspC < 0)
+//        dspC *= -1;
+//    
+//    int id = unit->plyrID;
+//    if(dspR == 1 && dspC == 1)
+//        if(board[strtR][strtC].type == 'C' || board[desR][desC].type == 'C')
+//            if(board[desR][desC].isOcp)
+//                if(board[desR][desC].occUnit->plyrID != id)
+//                    combat(unit, board[desR][desC]);
+//                else{
+//                    cout << "Invalid move\n";
+//                    moved = false;
+//                }
+//            else{
+//                unOcpy(&board[strtR][strtC]);
+//                ocpy(&board[desR][desC], unit);
+//            }
+//        else{
+//            cout << "Invalid move\n";
+//            moved = false;
+//        }
     //TODO - if "Frontline" involved, push them along then follow normal procedure   
 }
 string frmtCse(string s){
