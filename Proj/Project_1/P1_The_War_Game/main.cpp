@@ -46,7 +46,7 @@ void dspBrd(Location **, int);  //Displays the board
 bool mveVld(Location **, int, int, int, int, Unit *);
 bool isRRopn(Location **, int, int, int, char);
 void combat(Unit *, Location &); //Determines combat results
-bool move(Location **, int, int, int, int, Unit *);    //Move a piece from one location to another
+void move(Location **);    //Move a piece from one location to another
 string frmtCse(string);         //Formats string to proper noun capitalization
 int fndMtch(Unit[], string);                  //Get index of matching unit in array, if exists
 void whoNtSt(Unit[]);           //Lists all pieces not yet in play for a single player
@@ -622,66 +622,37 @@ bool isRRopn(Location **board, int initR, int initC, int dest, char drctn)
     }
     return rrOpn;
 }
-bool move(Location **board, int strtR, int strtC, int desR, int desC, Unit *unit){
-    bool moved;
+void move(Location **board){
+    bool vldMve;
     int strtR, strtC;   //(R,C) of starting position
     int desR, desC;     //(R,C) of destination position
     Unit *unit;
-    // TODO - change function params, let move function handle all validation
-    
-    //check if valid move first with mveVld()
+    //Loop until valid move is entered
     do{
-        mveVld(board, )
-        if(unit->name == "Flag" || unit->name == "Landmines"){
+        //Prompt player for movement
+        cout << "Enter the location of the piece you want to move. Use R,C format: ";
+        cin >> strtR; cin.ignore(1000,','); 
+        cin >> strtC; cin.ignore(1000,'\n');
+        cout << "Enter your destination in R,C format: ";
+        cin >> desR; cin.ignore(1000,','); 
+        cin >> desC; cin.ignore(1000,'\n');
+        //Validate movement
+        unit = board[strtR][strtC].occUnit;
+        vldMve = mveVld(board, strtR, strtC, desR, desC, unit->plyrID);
+        if(!vldMve)
+            cout << "Invalid Move\n";
+        else if(unit->name == "Flag" || unit->name == "Landmines"){
             cout << unit->name << " cannot ever be moved.\n";
-            moved = false;
-        } 
-    }while(!moved);
-        //Ensure unit type is allowed movement
-        //if(unit->name == "Flag" || unit->name == "Landmines"){
-        //    cout << unit->name << " cannot ever be moved.\n";
-        //    return false;
-        //}
-    //Then check if combat needed
-    //If combat, execute combat routine, if not then just ocpy routine
-    //End move
-    
-    //Movement needs to ensure the proper pieces are allowed to move. Flag
-    // and landmines cannot move, only RR allow for travel beyond adjacent 
-    //location, and engineers can turn corners on the RR
-    //disallow movements to "Mountains"
-    if(unit->name == "Flag" || unit->name == "Landmines"){
-        cout << unit->name << " cannot be moved.\n";
-        return false;
-    }
-    //TODO - Check and manage railroad movements
-    //TODO - check movement, if "Camp" is involved then allow diagonal movement
-//    int dspR = strtR - desR;
-//    if(dspR < 0)
-//        dspR *= -1;
-//    int dspC = strtC - desC;
-//    if(dspC < 0)
-//        dspC *= -1;
-//    
-//    int id = unit->plyrID;
-//    if(dspR == 1 && dspC == 1)
-//        if(board[strtR][strtC].type == 'C' || board[desR][desC].type == 'C')
-//            if(board[desR][desC].isOcp)
-//                if(board[desR][desC].occUnit->plyrID != id)
-//                    combat(unit, board[desR][desC]);
-//                else{
-//                    cout << "Invalid move\n";
-//                    moved = false;
-//                }
-//            else{
-//                unOcpy(&board[strtR][strtC]);
-//                ocpy(&board[desR][desC], unit);
-//            }
-//        else{
-//            cout << "Invalid move\n";
-//            moved = false;
-//        }
-    //TODO - if "Frontline" involved, push them along then follow normal procedure   
+            vldMve = false;
+        }
+    }while(!vldMve);
+    //Now make the move, including combat
+    if(board[desR][desC].isOcp)
+        combat(unit, board[desR][desC]);
+    else{
+        unOcpy(&board[strtR][strtC]);
+        ocpy(&board[desR][desC], unit);
+    } 
 }
 string frmtCse(string s){
     s[0] = toupper(s[0]);
