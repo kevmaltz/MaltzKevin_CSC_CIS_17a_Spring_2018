@@ -622,7 +622,7 @@ bool isRRopn(Location **board, int initR, int initC, int dest, char drctn)
     }
     return rrOpn;
 }
-void move(Location **board){
+void move(Location **board, int pTurn){
     bool vldMve;
     int strtR, strtC;   //(R,C) of starting position
     int desR, desC;     //(R,C) of destination position
@@ -637,12 +637,22 @@ void move(Location **board){
         cin >> desR; cin.ignore(1000,','); 
         cin >> desC; cin.ignore(1000,'\n');
         //Validate movement
-        unit = board[strtR][strtC].occUnit;
-        vldMve = mveVld(board, strtR, strtC, desR, desC, unit->plyrID);
+        vldMve = mveVld(board, strtR, strtC, desR, desC, pTurn);
         if(!vldMve)
             cout << "Invalid Move\n";
-        else if(unit->name == "Flag" || unit->name == "Landmines"){
-            cout << unit->name << " cannot ever be moved.\n";
+        if(board[strtR][strtC].isOcp){
+            unit = board[strtR][strtC].occUnit;
+            if(unit->plyrID != pTurn){
+            cout << "That is not your piece!\n";
+            vldMve = false;
+            }
+            else if(unit->name == "Flag" || unit->name == "Landmines"){
+                cout << unit->name << " cannot ever be moved.\n";
+                vldMve = false;
+            }
+        }
+        else{
+            cout << "No piece available to move from that location.\n";
             vldMve = false;
         }
     }while(!vldMve);
