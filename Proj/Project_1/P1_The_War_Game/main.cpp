@@ -13,6 +13,8 @@
 using namespace std;
 
 //User Libraries
+
+//Structures
 struct Unit{
     unsigned short priority;  //The value representing its position on the attack hierarchy, higher is better
     bool inPlay;    //If unit is still in play, set true. When unit leaves play, set false.
@@ -43,6 +45,9 @@ void setPcs(Location **, Unit [], string);
 void ocpy(Location*, Unit*);    //Occupy a location with the passed Unit, modify displays of location to reflect
 void unOcpy(Location*);         //Remove Unit from passed location, remove unit from displays as well
 void dspBrd(Location **, int);  //Displays the board
+void dspHP(int);                //displays the horizontal paths on the board
+void dspVP1(int);               //displays the vertical paths on the board for player 1
+void dspVP2(int);               //displays the vertical paths on the board for player 2
 bool mveVld(Location **, int, int, int, int, Unit *);
 bool isRRopn(Location **, int, int, int, char);
 void combat(Unit *, Location &); //Determines combat results
@@ -315,7 +320,8 @@ void dspBrd(Location **board, int pID){
     if(pID == 1){
         //Label the columns for the player, top of board
         cout << right << setw(8) << "C0" << setw(18) << "C1" 
-             << setw(18) << "C2" << setw(18) << "C3" << setw(18) << " C4\n"; 
+             << setw(18) << "C2" << setw(18) << "C3" << setw(18) << " C4\n";
+        // bR/bC = current board row/col; rmR/rmC = current row/col of indv location display
         for(int bR=ROW_MX-1; bR >= 0; bR--){
             for(int rmR=0; rmR < RM_RW; rmR++){
                 for(int bC=0; bC < COL_MX; bC++){
@@ -324,21 +330,7 @@ void dspBrd(Location **board, int pID){
                     if(bC != (COL_MX-1)){
                         //Handles the horizontal pathing displayed on the board
                         if(rmR == 2)
-                            switch(bR){
-                                case 12: cout << "-----"; break;
-                                case 11: cout << "=|=|="; break;
-                                case 10: cout << "-----"; break;
-                                case 9: cout << "-----"; break;
-                                case 8: cout << "-----"; break;
-                                case 7: cout << "=|=|="; break;
-                                case 6: cout << "     "; break;
-                                case 5: cout << "=|=|="; break;
-                                case 4: cout << "-----"; break;
-                                case 3: cout << "-----"; break;
-                                case 2: cout << "-----"; break;
-                                case 1: cout << "=|=|="; break;
-                                case 0: cout << "-----"; break;
-                            }
+                            dspHP(bR);
                         else 
                             cout << "     ";
                     }
@@ -350,70 +342,7 @@ void dspBrd(Location **board, int pID){
                     cout << endl;
             }
             //Handle the vertical pathing displayed on the board
-            switch(bR){
-                case 12:
-                    cout << "      |                 |                 |                 |                 |\n";
-                    cout << "      |                 |                 |                 |                 |\n";
-                    cout << "      |                 |                 |                 |                 |\n";
-                    break;
-                case 11:
-                    cout << "     |_|     \\          |          /      |      \\          |          /     |_|\n";
-                    cout << "     |_|       \\        |        /        |        \\        |        /       |_|\n";
-                    cout << "     |_|         \\      |      /          |          \\      |      /         |_|\n";
-                    break;
-                case 10:
-                    cout << "     |_|         /      |      \\          |          /      |      \\         |_|\n";
-                    cout << "     |_|       /        |        \\        |        /        |        \\       |_|\n";
-                    cout << "     |_|     /          |          \\      |      /          |          \\     |_|\n";
-                    break;
-                case 9:
-                    cout << "     |_|     \\          |          /      |      \\          |          /     |_|\n";
-                    cout << "     |_|       \\        |        /        |        \\        |        /       |_|\n";
-                    cout << "     |_|         \\      |      /          |          \\      |      /         |_|\n";
-                    break;
-                case 8:
-                    cout << "     |_|         /      |      \\          |          /      |      \\         |_|\n";
-                    cout << "     |_|       /        |        \\        |        /        |        \\       |_|\n";
-                    cout << "     |_|     /          |          \\      |      /          |          \\     |_|\n";
-                    break;
-                case 7:
-                    cout << "     |_|                                 |_|                                 |_|\n";
-                    cout << "     |_|                                 |_|                                 |_|\n";
-                    cout << "     |_|                                 |_|                                 |_|\n";
-                    break;
-                case 6:
-                    cout << "     |_|                                 |_|                                 |_|\n";
-                    cout << "     |_|                                 |_|                                 |_|\n";
-                    cout << "     |_|                                 |_|                                 |_|\n";
-                    break;
-                case 5:
-                    cout << "     |_|     \\          |          /      |      \\          |          /     |_|\n";
-                    cout << "     |_|       \\        |        /        |        \\        |        /       |_|\n";
-                    cout << "     |_|         \\      |      /          |          \\      |      /         |_|\n";
-                    break;
-                case 4:
-                    cout << "     |_|         /      |      \\          |          /      |      \\         |_|\n";
-                    cout << "     |_|       /        |        \\        |        /        |        \\       |_|\n";
-                    cout << "     |_|     /          |          \\      |      /          |          \\     |_|\n";
-                    break;
-                case 3:
-                    cout << "     |_|     \\          |          /      |      \\          |          /     |_|\n";
-                    cout << "     |_|       \\        |        /        |        \\        |        /       |_|\n";
-                    cout << "     |_|         \\      |      /          |          \\      |      /         |_|\n";
-                    break;
-                case 2:
-                    cout << "     |_|         /      |      \\          |          /      |      \\         |_|\n";
-                    cout << "     |_|       /        |        \\        |        /        |        \\       |_|\n";
-                    cout << "     |_|     /          |          \\      |      /          |          \\     |_|\n";
-                    break;
-                case 1:
-                    cout << "      |                 |                 |                 |                 |\n";
-                    cout << "      |                 |                 |                 |                 |\n";
-                    cout << "      |                 |                 |                 |                 |\n";
-                    break;
-                default: break;
-                    
-            }
+            dspVP1(bR);
         }
         //Label the columns for the player, bottom of board
         cout << right << setw(8) << "C0" << setw(18) << "C1" 
@@ -431,21 +360,7 @@ void dspBrd(Location **board, int pID){
                     if(bC != 0){
                         //Handles the horizontal pathing displayed on the board
                             if(rmR == 2)
-                                switch(bR){
-                                    case 12: cout << "-----"; break;
-                                    case 11: cout << "=|=|="; break;
-                                    case 10: cout << "-----"; break;
-                                    case 9: cout << "-----"; break;
-                                    case 8: cout << "-----"; break;
-                                    case 7: cout << "=|=|="; break;
-                                    case 6: cout << "     "; break;
-                                    case 5: cout << "=|=|="; break;
-                                    case 4: cout << "-----"; break;
-                                    case 3: cout << "-----"; break;
-                                    case 2: cout << "-----"; break;
-                                    case 1: cout << "=|=|="; break;
-                                    case 0: cout << "-----"; break;
-                                }
+                                dspHP(bR);
                             else 
                                 cout << "     ";
                         }
@@ -457,70 +372,7 @@ void dspBrd(Location **board, int pID){
                     cout << endl;
             }
             //Handles the vertical pathing displayed on the board
-            switch(bR){
-                case 0:
-                    cout << "      |                 |                 |                 |                 |\n";
-                    cout << "      |                 |                 |                 |                 |\n";
-                    cout << "      |                 |                 |                 |                 |\n";
-                    break;
-                case 1:
-                    cout << "     |_|     \\          |          /      |      \\          |          /     |_|\n";
-                    cout << "     |_|       \\        |        /        |        \\        |        /       |_|\n";
-                    cout << "     |_|         \\      |      /          |          \\      |      /         |_|\n";
-                    break;
-                case 2:
-                    cout << "     |_|         /      |      \\          |          /      |      \\         |_|\n";
-                    cout << "     |_|       /        |        \\        |        /        |        \\       |_|\n";
-                    cout << "     |_|     /          |          \\      |      /          |          \\     |_|\n";
-                    break;
-                case 3:
-                    cout << "     |_|     \\          |          /      |      \\          |          /     |_|\n";
-                    cout << "     |_|       \\        |        /        |        \\        |        /       |_|\n";
-                    cout << "     |_|         \\      |      /          |          \\      |      /         |_|\n";
-                    break;
-                case 4:
-                    cout << "     |_|         /      |      \\          |          /      |      \\         |_|\n";
-                    cout << "     |_|       /        |        \\        |        /        |        \\       |_|\n";
-                    cout << "     |_|     /          |          \\      |      /          |          \\     |_|\n";
-                    break;
-                case 5:
-                    cout << "     |_|                                 |_|                                 |_|\n";
-                    cout << "     |_|                                 |_|                                 |_|\n";
-                    cout << "     |_|                                 |_|                                 |_|\n";
-                    break;
-                case 6:
-                    cout << "     |_|                                 |_|                                 |_|\n";
-                    cout << "     |_|                                 |_|                                 |_|\n";
-                    cout << "     |_|                                 |_|                                 |_|\n";
-                    break;
-                case 7:
-                    cout << "     |_|     \\          |          /      |      \\          |          /     |_|\n";
-                    cout << "     |_|       \\        |        /        |        \\        |        /       |_|\n";
-                    cout << "     |_|         \\      |      /          |          \\      |      /         |_|\n";
-                    break;
-                case 8:
-                    cout << "     |_|         /      |      \\          |          /      |      \\         |_|\n";
-                    cout << "     |_|       /        |        \\        |        /        |        \\       |_|\n";
-                    cout << "     |_|     /          |          \\      |      /          |          \\     |_|\n";
-                    break;
-                case 9:
-                    cout << "     |_|     \\          |          /      |      \\          |          /     |_|\n";
-                    cout << "     |_|       \\        |        /        |        \\        |        /       |_|\n";
-                    cout << "     |_|         \\      |      /          |          \\      |      /         |_|\n";
-                    break;
-                case 10:
-                    cout << "     |_|         /      |      \\          |          /      |      \\         |_|\n";
-                    cout << "     |_|       /        |        \\        |        /        |        \\       |_|\n";
-                    cout << "     |_|     /          |          \\      |      /          |          \\     |_|\n";
-                    break;
-                case 11:
-                    cout << "      |                 |                 |                 |                 |\n";
-                    cout << "      |                 |                 |                 |                 |\n";
-                    cout << "      |                 |                 |                 |                 |\n";
-                    break;
-                default: break;
-
-            }
+            dspVP2(bR);
         }
         //Label the columns for the player, bottom of board
         cout << right << setw(8) << "C4" << setw(18) << "C3" 
@@ -528,6 +380,149 @@ void dspBrd(Location **board, int pID){
     }
     else
         cout << "ERROR: Cannot display the board.\n";
+}
+void dspHP(int brdRow)
+{
+    switch(brdRow){
+        case 11: cout << "=|=|="; break;
+        case 7: cout << "=|=|="; break;
+        case 6: cout << "     "; break;
+        case 5: cout << "=|=|="; break;
+        case 1: cout << "=|=|="; break;
+        default: cout << "-----"; break;
+    }
+}
+void dspVP1(int brdRow){
+    switch(brdRow){
+        case 12:
+            cout << "      |                 |                 |                 |                 |\n";
+            cout << "      |                 |                 |                 |                 |\n";
+            cout << "      |                 |                 |                 |                 |\n";
+            break;
+        case 11:
+            cout << "     |_|     \\          |          /      |      \\          |          /     |_|\n";
+            cout << "     |_|       \\        |        /        |        \\        |        /       |_|\n";
+            cout << "     |_|         \\      |      /          |          \\      |      /         |_|\n";
+            break;
+        case 10:
+            cout << "     |_|         /      |      \\          |          /      |      \\         |_|\n";
+            cout << "     |_|       /        |        \\        |        /        |        \\       |_|\n";
+            cout << "     |_|     /          |          \\      |      /          |          \\     |_|\n";
+            break;
+        case 9:
+            cout << "     |_|     \\          |          /      |      \\          |          /     |_|\n";
+            cout << "     |_|       \\        |        /        |        \\        |        /       |_|\n";
+            cout << "     |_|         \\      |      /          |          \\      |      /         |_|\n";
+            break;
+        case 8:
+            cout << "     |_|         /      |      \\          |          /      |      \\         |_|\n";
+            cout << "     |_|       /        |        \\        |        /        |        \\       |_|\n";
+            cout << "     |_|     /          |          \\      |      /          |          \\     |_|\n";
+            break;
+        case 7:
+            cout << "     |_|                                 |_|                                 |_|\n";
+            cout << "     |_|                                 |_|                                 |_|\n";
+            cout << "     |_|                                 |_|                                 |_|\n";
+            break;
+        case 6:
+            cout << "     |_|                                 |_|                                 |_|\n";
+            cout << "     |_|                                 |_|                                 |_|\n";
+            cout << "     |_|                                 |_|                                 |_|\n";
+            break;
+        case 5:
+            cout << "     |_|     \\          |          /      |      \\          |          /     |_|\n";
+            cout << "     |_|       \\        |        /        |        \\        |        /       |_|\n";
+            cout << "     |_|         \\      |      /          |          \\      |      /         |_|\n";
+            break;
+        case 4:
+            cout << "     |_|         /      |      \\          |          /      |      \\         |_|\n";
+            cout << "     |_|       /        |        \\        |        /        |        \\       |_|\n";
+            cout << "     |_|     /          |          \\      |      /          |          \\     |_|\n";
+            break;
+        case 3:
+            cout << "     |_|     \\          |          /      |      \\          |          /     |_|\n";
+            cout << "     |_|       \\        |        /        |        \\        |        /       |_|\n";
+            cout << "     |_|         \\      |      /          |          \\      |      /         |_|\n";
+            break;
+        case 2:
+            cout << "     |_|         /      |      \\          |          /      |      \\         |_|\n";
+            cout << "     |_|       /        |        \\        |        /        |        \\       |_|\n";
+            cout << "     |_|     /          |          \\      |      /          |          \\     |_|\n";
+            break;
+        case 1:
+            cout << "      |                 |                 |                 |                 |\n";
+            cout << "      |                 |                 |                 |                 |\n";
+            cout << "      |                 |                 |                 |                 |\n";
+            break;
+        default: break;
+
+    }
+}
+void dspVP2(int brdRow){
+    switch(brdRow){
+        case 0:
+            cout << "      |                 |                 |                 |                 |\n";
+            cout << "      |                 |                 |                 |                 |\n";
+            cout << "      |                 |                 |                 |                 |\n";
+            break;
+        case 1:
+            cout << "     |_|     \\          |          /      |      \\          |          /     |_|\n";
+            cout << "     |_|       \\        |        /        |        \\        |        /       |_|\n";
+            cout << "     |_|         \\      |      /          |          \\      |      /         |_|\n";
+            break;
+        case 2:
+            cout << "     |_|         /      |      \\          |          /      |      \\         |_|\n";
+            cout << "     |_|       /        |        \\        |        /        |        \\       |_|\n";
+            cout << "     |_|     /          |          \\      |      /          |          \\     |_|\n";
+            break;
+        case 3:
+            cout << "     |_|     \\          |          /      |      \\          |          /     |_|\n";
+            cout << "     |_|       \\        |        /        |        \\        |        /       |_|\n";
+            cout << "     |_|         \\      |      /          |          \\      |      /         |_|\n";
+            break;
+        case 4:
+            cout << "     |_|         /      |      \\          |          /      |      \\         |_|\n";
+            cout << "     |_|       /        |        \\        |        /        |        \\       |_|\n";
+            cout << "     |_|     /          |          \\      |      /          |          \\     |_|\n";
+            break;
+        case 5:
+            cout << "     |_|                                 |_|                                 |_|\n";
+            cout << "     |_|                                 |_|                                 |_|\n";
+            cout << "     |_|                                 |_|                                 |_|\n";
+            break;
+        case 6:
+            cout << "     |_|                                 |_|                                 |_|\n";
+            cout << "     |_|                                 |_|                                 |_|\n";
+            cout << "     |_|                                 |_|                                 |_|\n";
+            break;
+        case 7:
+            cout << "     |_|     \\          |          /      |      \\          |          /     |_|\n";
+            cout << "     |_|       \\        |        /        |        \\        |        /       |_|\n";
+            cout << "     |_|         \\      |      /          |          \\      |      /         |_|\n";
+            break;
+        case 8:
+            cout << "     |_|         /      |      \\          |          /      |      \\         |_|\n";
+            cout << "     |_|       /        |        \\        |        /        |        \\       |_|\n";
+            cout << "     |_|     /          |          \\      |      /          |          \\     |_|\n";
+            break;
+        case 9:
+            cout << "     |_|     \\          |          /      |      \\          |          /     |_|\n";
+            cout << "     |_|       \\        |        /        |        \\        |        /       |_|\n";
+            cout << "     |_|         \\      |      /          |          \\      |      /         |_|\n";
+            break;
+        case 10:
+            cout << "     |_|         /      |      \\          |          /      |      \\         |_|\n";
+            cout << "     |_|       /        |        \\        |        /        |        \\       |_|\n";
+            cout << "     |_|     /          |          \\      |      /          |          \\     |_|\n";
+            break;
+        case 11:
+            cout << "      |                 |                 |                 |                 |\n";
+            cout << "      |                 |                 |                 |                 |\n";
+            cout << "      |                 |                 |                 |                 |\n";
+            break;
+        default: break;
+
+    }
 }
 void combat(Unit *attckr, Location &loc){
     if(attckr->priority == 10){
