@@ -46,7 +46,7 @@ void dspBrd(Location **, int);  //Displays the board
 bool mveVld(Location **, int, int, int, int, Unit *);
 bool isRRopn(Location **, int, int, int, char);
 void combat(Unit *, Location &); //Determines combat results
-void move(Location **);    //Move a piece from one location to another
+void move(Location **, int pTurn);    //Move a piece from one location to another
 string frmtCse(string);         //Formats string to proper noun capitalization
 int fndMtch(Unit[], string);                  //Get index of matching unit in array, if exists
 void whoNtSt(Unit[]);           //Lists all pieces not yet in play for a single player
