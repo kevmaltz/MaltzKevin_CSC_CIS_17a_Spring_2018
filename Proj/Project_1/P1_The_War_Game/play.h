@@ -30,6 +30,7 @@ namespace play{
     void unOcpy(Location*);         //Remove Unit from passed location, remove unit from displays as well
     std::string frmtCse(std::string);         //Formats string to proper noun capitalization
     int isWnr(int, Unit [], Unit[]);       //Determines if the specified player has won the game
+    void wrtLog(std::fstream &, Location**, Unit[], Unit[]);
 }
 
 #endif /* PLAY_H */

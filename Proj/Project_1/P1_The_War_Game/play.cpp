@@ -204,3 +204,6 @@ namespace play{
         return winner;
     }
 }
+    void wrtLog(std::fstream &, Location**, Unit[], Unit[]){
+        
+    }
