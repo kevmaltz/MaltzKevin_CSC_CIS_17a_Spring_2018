@@ -4,9 +4,11 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>Constants.h</itemPath>
       <itemPath>Location.h</itemPath>
-      <itemPath>Setup.h</itemPath>
       <itemPath>Unit.h</itemPath>
+      <itemPath>play.h</itemPath>
+      <itemPath>setup.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -17,6 +19,8 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>main.cpp</itemPath>
+      <itemPath>play.cpp</itemPath>
+      <itemPath>setup.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -43,15 +47,23 @@
           <standard>8</standard>
         </ccTool>
       </compileType>
+      <item path="Constants.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Location.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Setup.dat" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Setup.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Unit.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="play.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="play.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="setup.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="setup.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -74,15 +86,23 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="Constants.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Location.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Setup.dat" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Setup.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Unit.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="play.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="play.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="setup.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="setup.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>
