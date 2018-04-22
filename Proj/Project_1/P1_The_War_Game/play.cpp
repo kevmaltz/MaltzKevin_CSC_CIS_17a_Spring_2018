@@ -180,13 +180,15 @@ namespace play{
             }
     }
     string frmtCse(string s){
-        s[0] = toupper(s[0]);
+        int pos = -1;
+        //rewrites entire string, minus first character, to lowercase value
         for(int i=1; i<s.length(); i++)
             s[i] = tolower(s[i]);
-
-        //Proper capitalization for Field Marshal
-        if(s.length() == 13)
-            s[6] = toupper(s[6]);
+        //Capitalize first letter of every space separated word in the string
+        do{
+            s[pos+1] = toupper(s[pos+1]);
+            pos = s.find_first_of(' ', pos+1);
+        }while(pos != -1);
 
         return s;
     }

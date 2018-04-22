@@ -62,6 +62,7 @@ int main(int argc, char** argv)
     //player 2 piece setup
     dspBrd(board,2);
     setup::setPcs(board, p2Pcs, plyr2);
+    //TODO - Prepare REDO file here
     
     //PLAY
     do{

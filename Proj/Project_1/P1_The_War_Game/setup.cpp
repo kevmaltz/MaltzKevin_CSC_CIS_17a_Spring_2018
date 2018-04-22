@@ -91,6 +91,7 @@ namespace setup{
                 getline(cin, slctn);
                 //Convert string to proper case formatting
                 slctn = frmtCse(slctn);
+                cout << "after conversion string is" << slctn << endl;
                 //Check if piece exists and not in play. If valid store index of selected unit
                 mtchInd = fndMtch(pcs, slctn);
                 //If no valid match found notify player and restart piece selection
