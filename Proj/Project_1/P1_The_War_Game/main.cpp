@@ -13,22 +13,23 @@
 using namespace std;
 
 //User Libraries
-
+#include "Unit.h"
+#include "Location.h"
 //Structures
-struct Unit{
-    unsigned short priority;  //The value representing its position on the attack hierarchy, higher is better
-    bool inPlay;    //If unit is still in play, set true. When unit leaves play, set false.
-    string name;    //Name of piece
-    int plyrID;     //ID of player who owns the unit.( ID = 1 or ID = 2 )
-};
-struct Location{
-    char type;      //What type of position is it. Camp/Battlefield/Frontline/Headquarters/Mountain
-    bool isOcp;     //If location occupied, set true
-    bool isRR;      //Set true if location is on railroad line
-    char dsply1[5][13]; //Display for player 1
-    char dsply2[5][13]; //Display for player 2
-    Unit *occUnit;  //Pointer to unit occupying the location.
-};
+//struct Unit{
+//    unsigned short priority;  //The value representing its position on the attack hierarchy, higher is better
+//    bool inPlay;    //If unit is still in play, set true. When unit leaves play, set false.
+//    string name;    //Name of piece
+//    int plyrID;     //ID of player who owns the unit.( ID = 1 or ID = 2 )
+//};
+//struct Location{
+//    char type;      //What type of position is it. Camp/Battlefield/Frontline/Headquarters/Mountain
+//    bool isOcp;     //If location occupied, set true
+//    bool isRR;      //Set true if location is on railroad line
+//    char dsply1[5][13]; //Display for player 1
+//    char dsply2[5][13]; //Display for player 2
+//    Unit *occUnit;  //Pointer to unit occupying the location.
+//};
 
 //Global Constants - Math, Science, Conversions, 2D Array Sizes
 const short ROW_MX = 13;//Maximum number of rows on the board
@@ -207,20 +208,16 @@ void setPcs(Location **board, Unit pcs[], string pNme){
             //Prompt for choice of piece
             cout << pNme << " select a piece by typing in the name: ";
             getline(cin, slctn);
-
             //Convert string to proper case formatting
-            frmtCse(slctn);
-
+            slctn = frmtCse(slctn);
             //Check if piece exists and not in play. If valid store index of selected unit
             mtchInd = fndMtch(pcs, slctn);
-
             //If no valid match found notify player and restart piece selection
             if(mtchInd == -1){
                 cout << "Invalid selection\n";
                 repeat = true;
             }
-        }while(repeat);//FIND ME
-        
+        }while(repeat);//FIND ME        
         //Setup pieces on board
         do{
             repeat = false;;
@@ -245,8 +242,7 @@ void setPcs(Location **board, Unit pcs[], string pNme){
                     repeat = true;
                     cout << "Invalid location\n";
                 }
-            }while(repeat);
-            
+            }while(repeat);            
             //Check if chosen location is already occupied, if yes decide what to do
             if(board[slctR][slctC].occUnit != NULL){
                 cout << board[slctR][slctC].occUnit->name
@@ -265,8 +261,7 @@ void setPcs(Location **board, Unit pcs[], string pNme){
                 }
             }
         }while(repeat);
-        ocpy(&board[slctR][slctC], &pcs[mtchInd]);
-        
+        ocpy(&board[slctR][slctC], &pcs[mtchInd]);        
         //If any pieces are not yet set in play, allSet=false and loop setup
         for(int i=0; i < N_PCS && allSet; i++)
             if(pcs[i].inPlay == false){
@@ -682,12 +677,15 @@ void whoNtSt(Unit pcs[]){
     int perLne = 0;
     for(int i=0; i < N_PCS; i++){
         if(pcs[i].inPlay == false){
-            cout << pcs[i].name << endl;
+            cout << setw(14) << pcs[i].name;
             perLne++;
-            if(0 == (perLne % 5))
+            if(0 == (perLne % 3))
                 cout << endl;
+            else
+                cout << ", ";
         }
     }
+    cout << endl;
 }
 void ptBrdLoc(Location **brd){
     for(int r=0; r < ROW_MX; r++){

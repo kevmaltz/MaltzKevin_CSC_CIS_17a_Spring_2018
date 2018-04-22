@@ -4,6 +4,9 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>Location.h</itemPath>
+      <itemPath>Setup.h</itemPath>
+      <itemPath>Unit.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -40,7 +43,13 @@
           <standard>8</standard>
         </ccTool>
       </compileType>
+      <item path="Location.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Setup.dat" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Setup.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Unit.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -65,7 +74,13 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="Location.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Setup.dat" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Setup.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Unit.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
