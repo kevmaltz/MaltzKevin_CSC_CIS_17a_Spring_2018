@@ -24,7 +24,7 @@ namespace setup{
     Location **initBrd(std::fstream &);  //Initializes the board
     void initPcs(std::fstream &, Unit [], Unit []);  //Initialize data for all pieces(Unit structures)
     int fndMtch(Unit[], std::string);           //Get index of matching unit in array, if exists
-    int stPlyrs(std::string &, std::string &, bool &);    //Sets the players and their names, returns number of human players
+    void stPlyrs(std::string &, std::string &);    //Sets the player names
     void setPcs(Location **, Unit [], std::string);
     void whoNtSt(Unit[]);           //Lists all pieces not yet in play for a single player
 }

@@ -57,32 +57,12 @@ namespace setup{
         }
         return -1;  //Flag for no match found
     }
-    int stPlyrs(string &plyr1, string &plyr2, bool &plyNPC){
-    int nPlyr = 0;  //Number of human players. Sentinel value of 0
-    
-    cout << "2 player game or 1 player vs AI available\n";
-    cout << "Enter number of players(2 max): ";
-    cin >> nPlyr;
-    cin.ignore(1000, '\n');
-    while(nPlyr != 1 && nPlyr != 2){
-        cout << "Invalid number of player. Re-enter(max 2): ";
-        cin >> nPlyr;
-        cin.ignore(1000, '\n');
+    void stPlyrs(string &plyr1, string &plyr2){
+            cout << "Enter player 1's name: ";
+            getline(cin, plyr1);
+            cout << "Enter player 2's name: ";
+            getline(cin, plyr2);
     }
-    if(nPlyr == 1){
-        cout << "Enter player name: ";
-        getline(cin, plyr1);
-        plyr2 = "NPC";
-        plyNPC = true;
-    }
-    if(nPlyr == 2){
-        cout << "Enter player 1's name: ";
-        getline(cin, plyr1);
-        cout << "Enter player 2's name: ";
-        getline(cin, plyr2);
-    }
-    return nPlyr;
-}
     void setPcs(Location **board, Unit pcs[], string pNme){
         string slctn;   //piece selection entered by player
         int mtchInd;    //Index of Unit.name in pxPcs that matches slctn. -1 sentinel value
@@ -185,3 +165,29 @@ namespace setup{
     }
 }
 
+    /*Alternate implementation of setPlyrs for when AI capability is introduced*/
+//    int stPlyrs(string &plyr1, string &plyr2, bool &plyNPC){
+//        int nPlyr = 0;  //Number of human players. Sentinel value of 0
+//
+//        cout << "2 player game or 1 player vs AI available\n";
+//        cout << "Enter number of players(2 max): ";
+//        cin >> nPlyr;
+//        cin.ignore(1000, '\n');
+//        while(nPlyr != 1 && nPlyr != 2){
+//            cout << "Invalid number of player. Re-enter(max 2): ";
+//            cin >> nPlyr;
+//            cin.ignore(1000, '\n');
+//        }
+//        if(nPlyr == 1){
+//            cout << "Enter player name: ";
+//            getline(cin, plyr1);
+//            plyr2 = "NPC";
+//            plyNPC = true;
+//        }
+//        if(nPlyr == 2){
+//            cout << "Enter player 1's name: ";
+//            getline(cin, plyr1);
+//            cout << "Enter player 2's name: ";
+//            getline(cin, plyr2);
+//        return nPlyr;
+//    }

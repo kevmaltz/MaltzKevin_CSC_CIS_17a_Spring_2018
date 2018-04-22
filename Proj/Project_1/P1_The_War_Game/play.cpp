@@ -190,4 +190,15 @@ namespace play{
 
         return s;
     }
+    bool isWnr(int id, Unit p1[], Unit p2[])
+    {
+        bool win = false;
+        if(id == 1)
+            if(!p2[N_PCS - 1].inPlay)
+                win = true;
+        if(id == 2)
+            if(!p1[N_PCS - 1].inPlay)
+                win = true;
+        return win;
+    }
 }

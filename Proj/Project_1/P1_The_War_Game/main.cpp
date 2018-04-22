@@ -30,11 +30,11 @@ void dspVP2(int);               //displays the vertical paths on the board for p
 //Execution begins here
 int main(int argc, char** argv) 
 {
-    int nPlyr;              //Number of human players
     string plyr1;           //Name of player 1
     string plyr2;           //Name of player 2
-    bool ai = false;        //Playing against AI?
     unsigned int turn = 0;  //The current turn number. Increments +1 every turn
+    int curPlyr;            //Current player whos turn it is
+    bool gmeOvr = false;
     
     fstream stpInp("setup.dat", ios::in | ios::binary);
     Location **board;   //13x5 game board
@@ -54,18 +54,29 @@ int main(int argc, char** argv)
     }
     
     //Set player(s) and return number of human players
-    nPlyr = setup::stPlyrs(plyr1, plyr2, ai);
+    setup::stPlyrs(plyr1, plyr2);
+    //TODO - Implement fast set up option here
     //player 1 piece setup
     dspBrd(board,1);
     setup::setPcs(board, p1Pcs, plyr1);
     //player 2 piece setup
     dspBrd(board,2);
     setup::setPcs(board, p2Pcs, plyr2);
-//TODO - /*FOR AI IMPLEMENTATION*/
-//    if(ai)
-//        aiStPcs(board, p2Pcs);
-//    else
-//        setPcs(board, p2Pcs, plyr2);
+    
+    //PLAY
+    do{
+        curPlyr = turn%2 + 1;
+        //Player move
+        if(curPlyr == 1)
+            cout << plyr1 << "'s turn.\n";
+        else
+            cout << plyr2 << "'s turn.\n";
+        play::move(board, curPlyr);
+        //TODO - Write out current gamestate to file here
+        
+        //Check if won game
+        gmeOvr = play::isWnr(curPlyr, p1Pcs, p1Pcs);
+    }while(!gmeOvr);
     
     //Cleanup
     for(int r=0; r < ROW_MX; r++)
