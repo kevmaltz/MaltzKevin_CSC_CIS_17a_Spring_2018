@@ -36,17 +36,17 @@ int main(int argc, char** argv)
     int curPlyr;            //Current player whos turn it is
     bool winner = false;
     
-    fstream stpInp("setup.dat", ios::in | ios::binary);
+    fstream fin("setup.dat", ios::in | ios::binary);
     Location **board;   //13x5 game board
     Unit p1Pcs[N_PCS];  //Holds all of player 1's pieces
     Unit p2Pcs[N_PCS];  //Holds all of player 2's pieces
     
-    if(stpInp.is_open() && stpInp.good()){
+    if(fin.is_open() && fin.good()){
         //Read in data for every location on the board
-        board = setup::initBrd(stpInp);
+        board = setup::initBrd(fin);
         //Read in data for each piece
-        setup::initPcs(stpInp, p1Pcs, p2Pcs);
-        stpInp.close();
+        setup::initPcs(fin, p1Pcs, p2Pcs);
+        fin.close();
     }
     else{   //Return exit failure if setup file fails to open.
         cout << "ERROR: unable to open file Setup.dat, exiting program\n";
