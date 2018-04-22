@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     string plyr2;           //Name of player 2
     unsigned int turn = 0;  //The current turn number. Increments +1 every turn
     int curPlyr;            //Current player whos turn it is
-    bool gmeOvr = false;
+    bool winner = false;
     
     fstream stpInp("setup.dat", ios::in | ios::binary);
     Location **board;   //13x5 game board
@@ -49,7 +49,7 @@ int main(int argc, char** argv)
         stpInp.close();
     }
     else{   //Return exit failure if setup file fails to open.
-        cout << "ERROR: unable to open file Setut.dat, exiting program\n";
+        cout << "ERROR: unable to open file Setup.dat, exiting program\n";
         return EXIT_FAILURE;
     }
     
@@ -75,8 +75,16 @@ int main(int argc, char** argv)
         //TODO - Write out current gamestate to file here
         
         //Check if won game
-        gmeOvr = play::isWnr(curPlyr, p1Pcs, p1Pcs);
-    }while(!gmeOvr);
+        winner = play::isWnr(curPlyr, p1Pcs, p1Pcs);
+        
+    }while(!winner);
+    //Declare the winner
+    if(winner == 1)
+        cout << "Congratulations " << plyr1 <<"! You won!\n";
+    else if(winner == 2)
+        cout << "Congratulations " << plyr2 <<"! You won!\n";
+    else
+        cout <<"What happened??? You both lose.\n";
     
     //Cleanup
     for(int r=0; r < ROW_MX; r++)
