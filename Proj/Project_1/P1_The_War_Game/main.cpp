@@ -681,8 +681,6 @@ void whoNtSt(Unit pcs[]){
             perLne++;
             if(0 == (perLne % 3))
                 cout << endl;
-            else
-                cout << ", ";
         }
     }
     cout << endl;
