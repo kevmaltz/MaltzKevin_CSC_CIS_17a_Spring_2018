@@ -29,7 +29,7 @@ namespace play{
     void ocpy(Location*, Unit*);    //Occupy a location with the passed Unit, modify displays of location to reflect
     void unOcpy(Location*);         //Remove Unit from passed location, remove unit from displays as well
     std::string frmtCse(std::string);         //Formats string to proper noun capitalization
-    bool isWnr(int, Unit [], Unit[]);       //Determines if the specified player has won the game
+    int isWnr(int, Unit [], Unit[]);       //Determines if the specified player has won the game
 }
 
 #endif /* PLAY_H */
