@@ -55,11 +55,11 @@ int main(int argc, char** argv)
     
     //Set player(s) and return number of human players
     nPlyr = setup::stPlyrs(plyr1, plyr2, ai);
-    //Display the board, right now with no pieces.
-    dspBrd(board,2);
     //player 1 piece setup
+    dspBrd(board,1);
     setup::setPcs(board, p1Pcs, plyr1);
     //player 2 piece setup
+    dspBrd(board,2);
     setup::setPcs(board, p2Pcs, plyr2);
 //TODO - /*FOR AI IMPLEMENTATION*/
 //    if(ai)
