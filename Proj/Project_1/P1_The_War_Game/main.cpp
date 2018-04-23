@@ -97,7 +97,7 @@ int main(int argc, char** argv)
         //TODO - Write out current gamestate to file here
         play::wrtLog( log, board, p1Pcs, p2Pcs);
         //Check if won game
-        winner = play::isWnr(curPlyr, p1Pcs, p1Pcs);
+        winner = play::isWnr(curPlyr, p1Pcs, p2Pcs);
         //Increment turn counter
         turn++;
     }while(!winner);
