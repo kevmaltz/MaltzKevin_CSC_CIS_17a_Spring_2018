@@ -23,6 +23,7 @@
 namespace setup{
     Location **initBrd(std::fstream &);  //Initializes the board
     void initPcs(std::fstream &, Unit [], Unit []);  //Initialize data for all pieces(Unit structures)
+    void spdSet(Location**, Unit[], int, std::string);    //Setup players board from random config file
     int fndMtch(Unit[], std::string);           //Get index of matching unit in array, if exists
     void stPlyrs(std::string &, std::string &);    //Sets the player names
     void setPcs(Location **, Unit [], std::string);

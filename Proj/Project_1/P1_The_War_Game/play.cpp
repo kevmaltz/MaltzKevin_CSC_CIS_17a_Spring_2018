@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 #include "play.h"
 
@@ -192,8 +193,7 @@ namespace play{
 
         return s;
     }
-    int isWnr(int id, Unit p1[], Unit p2[])
-    {
+    int isWnr(int id, Unit p1[], Unit p2[]){
         int winner = 0;
         if(id == 1)
             if(!p2[N_PCS - 1].inPlay)
@@ -203,7 +203,25 @@ namespace play{
                 winner = id;
         return winner;
     }
-}
-    void wrtLog(std::fstream &, Location**, Unit[], Unit[]){
-        
+    void wrtLog(fstream &file, Location **board, Unit p1[], Unit p2[]){
+        int p1p = 0;
+        int p2p = 0;
+        for(int i=0; i < N_PCS; i++){
+            if(p1[i].inPlay)
+                p1p++;
+            if(p2[i].inPlay)
+                p2p++;
+        }
+        //Write out OWNER - UNIT ADDRESS - LOCATION INDICES
+        for(int r=0; r < ROW_MX; r++)
+            for(int c=0; c < COL_MX; c++){
+                if(board[r][c].isOcp)
+                    file << board[r][c].occUnit->plyrID << " "
+                         << board[r][c].occUnit << " "
+                         << r << " " << c << endl;
+            }
+        //Track
+        file << p1p+p2p << endl;
     }
+}
+    

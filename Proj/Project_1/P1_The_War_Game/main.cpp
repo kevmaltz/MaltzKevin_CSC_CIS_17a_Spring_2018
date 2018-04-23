@@ -32,6 +32,7 @@ int main(int argc, char** argv)
 {
     string plyr1;           //Name of player 1
     string plyr2;           //Name of player 2
+    char stpCh;             //Setup type chosen by players
     unsigned int turn = 0;  //The current turn number. Increments +1 every turn
     int curPlyr;            //Current player whos turn it is
     bool winner = false;
@@ -55,15 +56,30 @@ int main(int argc, char** argv)
     
     //Set player(s) and return number of human players
     setup::stPlyrs(plyr1, plyr2);
-    //TODO - Implement fast set up option here
     //player 1 piece setup
     dspBrd(board,1);
-    setup::setPcs(board, p1Pcs, plyr1);
+    cout << plyr1 << " enter F for quick setup option."
+         << " Enter any other key for manual setup\n";
+    cin >> stpCh; cin.ignore(1000,'\n');
+    if(stpCh == 'F' || stpCh == 'f')
+        setup::spdSet(board, p1Pcs, 1, plyr1);
+    else
+        setup::setPcs(board, p1Pcs, plyr1);
     //player 2 piece setup
     dspBrd(board,2);
-    setup::setPcs(board, p2Pcs, plyr2);
-    //TODO - Prepare REDO file here
-    
+    cout << plyr2 << " enter F for quick setup option."
+         << " Enter any other key for manual setup\n";
+    cin >> stpCh; cin.ignore(1000,'\n');
+    if(stpCh == 'F' || stpCh == 'f')
+        setup::spdSet(board, p2Pcs, 2, plyr2);
+    else
+        setup::setPcs(board, p2Pcs, plyr2);
+    //Open REDO file
+    fstream log("redo_record.txt", ios::in | ios::out);
+    if(log.bad() || !log.is_open()){
+        cout << "ERROR: unable to open file Redo.dat, exiting program\n";
+        return EXIT_FAILURE;
+    }
     //PLAY
     do{
         curPlyr = turn%2 + 1;
@@ -74,11 +90,11 @@ int main(int argc, char** argv)
             cout << plyr2 << "'s turn.\n";
         play::move(board, curPlyr);
         //TODO - Write out current gamestate to file here
-        
+        play::wrtLog( log, board, p1Pcs, p2Pcs);
         //Check if won game
         winner = play::isWnr(curPlyr, p1Pcs, p1Pcs);
-        
     }while(!winner);
+    
     //Declare the winner
     if(winner == 1)
         cout << "Congratulations " << plyr1 <<"! You won!\n";
