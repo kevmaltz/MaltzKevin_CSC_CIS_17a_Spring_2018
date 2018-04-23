@@ -21,14 +21,22 @@
 #include "Unit.h"
 #include "Location.h"
 namespace setup{
-    Location **initBrd(std::fstream &);  //Initializes the board
-    void initPcs(std::fstream &, Unit [], Unit []);  //Initialize data for all pieces(Unit structures)
+    ///Initializes the board using a setup file
+    Location **initBrd(std::fstream &);
+    ///Initialize data for all pieces(Unit structures)
+    void initPcs(std::fstream &, Unit [], Unit []);
+    ///Handles game setup options input by player
     void gmeSet(Location**, Unit[], std::string, int);
-    void spdSet(Location**, Unit[], int, std::string);    //Setup players board from random config file
-    int fndMtch(Unit[], std::string);           //Get index of matching unit in array, if exists
-    void stPlyrs(std::string &, std::string &);    //Sets the player names
+    ///Setup players board from a config file
+    void spdSet(Location**, Unit[], int, std::string);
+    ///Get index of matching unit in array, if exists
+    int fndMtch(Unit[], std::string);
+    ///Sets the player names
+    void stPlyrs(std::string &, std::string &);
+    ///Allows player to manually setup their pieces
     void setPcs(Location **, Unit [], std::string);
-    void whoNtSt(Unit[]);           //Lists all pieces not yet in play for a single player
+    ///Lists all pieces not yet in play for a single player, for use in manual setup
+    void whoNtSt(Unit[]);
 }
 
 #endif /* SETUP_H */

@@ -14,6 +14,7 @@
                    displayName="Resource Files"
                    projectFiles="true">
       <itemPath>Setup.dat</itemPath>
+      <itemPath>log.dat</itemPath>
       <itemPath>log.txt</itemPath>
       <itemPath>spdSet1.txt</itemPath>
       <itemPath>spdSet2.txt</itemPath>
@@ -57,6 +58,8 @@
       <item path="Setup.dat" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Unit.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="log.dat" ex="false" tool="3" flavor2="0">
       </item>
       <item path="log.txt" ex="false" tool="3" flavor2="0">
       </item>
@@ -102,6 +105,8 @@
       <item path="Setup.dat" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Unit.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="log.dat" ex="false" tool="3" flavor2="0">
       </item>
       <item path="log.txt" ex="false" tool="3" flavor2="0">
       </item>

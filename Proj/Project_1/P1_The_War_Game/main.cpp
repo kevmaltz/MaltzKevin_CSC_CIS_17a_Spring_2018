@@ -66,8 +66,10 @@ int main(int argc, char** argv)
     setup::gmeSet(board, p2Pcs, plyr2, 2);
     //Open REDO file
     if(undo == 'Y' || undo == 'y'){
-        log.open("log.txt", ios::in | ios::out);
-        if(log.bad() || !log.is_open()){
+        log.open("log.dat", ios::in | ios::out | ios::binary | ios::trunc);
+        if(log.is_open() && log.good())
+            play::wrtLog( log, board, p1Pcs, p2Pcs);
+        else{
             cout << "ERROR: unable to open file log.dat, disabling undo option\n";
             undo = 'N';
         }
@@ -88,7 +90,7 @@ int main(int argc, char** argv)
             cin.ignore(1000,'\n');
         }
         //Check if player wants to undo a move
-        if(undo == 'Y' || undo == 'y')
+        if((undo == 'Y' || undo == 'y') && turn > 1)
             play::undo(log, board, p1Pcs, p2Pcs, turn);
         dspBrd(board, curPlyr);
         play::move(board, curPlyr);

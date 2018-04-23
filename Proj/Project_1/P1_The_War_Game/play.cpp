@@ -182,11 +182,10 @@ namespace play{
         loc->occUnit = NULL;
         loc->isOcp = false;
         //Clear board display of location for both players
-        for(int r=1; r < RM_RW-1; r++)
-            for(int c=1; c < RM_CL-1; c++){
-                loc->dsply1[r][c] = ' ';
-                loc->dsply2[r][c] = ' ';
-            }
+        for(int c=1; c < RM_CL-1; c++){
+            loc->dsply1[2][c] = ' ';
+            loc->dsply2[2][c] = ' ';
+        }
     }
     string frmtCse(string s){
         int pos = -1;
@@ -212,30 +211,40 @@ namespace play{
         return winner;
     }
     void wrtLog(fstream &file, Location **board, Unit p1[], Unit p2[]){
-        int p1p = 0;
-        int p2p = 0;
+        int rcrdSz = 0;
         for(int i=0; i < N_PCS; i++){
             if(p1[i].inPlay)
-                p1p++;
+                rcrdSz++;
             if(p2[i].inPlay)
-                p2p++;
+                rcrdSz++;
         }
-        //Write out OWNER - UNIT ADDRESS - LOCATION INDICES
-        file << p1p+p2p << endl; //Record size
+        fstream fileTxt("log.txt", ios::out | ios::in);
+        //Write out UNIT ADDRESS - LOCATION INDICES
+        fileTxt << rcrdSz << endl; //Record size
         for(int r=0; r < ROW_MX; r++)
             for(int c=0; c < COL_MX; c++){
                 if(board[r][c].isOcp)
-                    file << board[r][c].occUnit->plyrID << " "
-                         << board[r][c].occUnit << " "
+                    fileTxt << board[r][c].occUnit << " "
                          << r << " " << c << endl;
+            }
+        //Write out to binary file
+        file.write(reinterpret_cast<char*>(&rcrdSz), sizeof(int));
+        for(int r=0; r < ROW_MX; r++)
+            for(int c=0; c < COL_MX; c++){
+                if(board[r][c].isOcp){
+                    file.write(reinterpret_cast<char*>(&board[r][c].occUnit),sizeof(Unit*));
+                    file.write(reinterpret_cast<char*>(&r),sizeof(int));
+                    file.write(reinterpret_cast<char*>(&c),sizeof(int));
+                }  
             }
         
     }
     void undo(fstream &log, Location** brd, Unit p1[], Unit p2[], int &turn){
         char und;
-        int nRnds;
-        int rcdSz;  //Record size
-        int newTurn;
+        int nRnds, rcrdSz;  //Record size
+        int cursor = 0;
+        Unit* unit;
+        int r,c;
         string trash;
         cout << "Undo round(s)? Y/N: ";
         cin >> und; cin.ignore(1000,'\n');
@@ -244,16 +253,29 @@ namespace play{
             cout << "Undo how many rounds? ";
             cin >> nRnds; cin.ignore(1000,'\n');
             }while(nRnds*2 > turn);
-            newTurn = turn - nRnds*2;
-            for(int r=0; r < ROW_MX; r++){//Clear board
+            turn = turn - nRnds*2;
+            //Clear the board
+            for(int r=0; r < ROW_MX; r++){
                 for(int c=0; c < COL_MX; c++)
                     if(brd[r][c].isOcp)
                         play::unOcpy(&brd[r][c]);
             }
-            for(int i=0; i < newTurn; i++){
-                cin >> rcdSz; cin.ignore(1000,'\n');
+            //Find correct record, start from beginning
+            log.seekg(cursor,ios::beg);
+            for(int i=0; i < turn; i++){
+                log.read(reinterpret_cast<char*>(&rcrdSz),sizeof(int));
+                cursor += sizeof(int) + rcrdSz * (sizeof(Unit*) + sizeof(int)*2);
+                log.seekg(cursor,ios::beg);
             }
-                
+            //Read and use record
+            log.read(reinterpret_cast<char*>(&rcrdSz),sizeof(int));
+            for(int i=0; i < rcrdSz; i++){
+                log.read(reinterpret_cast<char*>(&unit),sizeof(Unit*));
+                log.read(reinterpret_cast<char*>(&r),sizeof(int));
+                log.read(reinterpret_cast<char*>(&c),sizeof(int));
+                ocpy(&brd[r][c], unit);
+            }
+            log.seekp(log.tellg());
         }
     }
 }
