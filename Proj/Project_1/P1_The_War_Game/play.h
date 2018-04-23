@@ -31,6 +31,7 @@ namespace play{
     std::string frmtCse(std::string);         //Formats string to proper noun capitalization
     int isWnr(int, Unit [], Unit[]);       //Determines if the specified player has won the game
     void wrtLog(std::fstream &, Location**, Unit[], Unit[]);
+    void undo(std::fstream &, Location**, Unit [], Unit [], int &);
 }
 
 #endif /* PLAY_H */

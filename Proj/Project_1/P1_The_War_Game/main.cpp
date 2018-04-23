@@ -30,12 +30,13 @@ void dspVP2(int);               //displays the vertical paths on the board for p
 //Execution begins here
 int main(int argc, char** argv) 
 {
+    char undo;              //Y(es) or N(o) for undo option to be enabled
     string plyr1;           //Name of player 1
     string plyr2;           //Name of player 2
-    unsigned int turn = 0;  //The current turn number. Increments +1 every turn
+    int turn = 0;  //The current turn number. Increments +1 every turn
     int curPlyr;            //Current player whos turn it is
     bool winner = false;
-    
+    fstream log;            //Fstream object for logging when undo enabled
     fstream fin("setup.dat", ios::in | ios::binary);
     Location **board;   //13x5 game board
     Unit p1Pcs[N_PCS];  //Holds all of player 1's pieces
@@ -52,7 +53,9 @@ int main(int argc, char** argv)
         cout << "ERROR: unable to open file Setup.dat, exiting program\n";
         return EXIT_FAILURE;
     }
-    
+    //Enable or Disable undo function
+    cout << "Enable undo functionality? Y/N: ";
+    cin >> undo; cin.ignore(1000,'\n');
     //Set player(s) and return number of human players
     setup::stPlyrs(plyr1, plyr2);
     //player 1 piece setup
@@ -62,15 +65,18 @@ int main(int argc, char** argv)
     dspBrd(board,2);
     setup::gmeSet(board, p2Pcs, plyr2, 2);
     //Open REDO file
-    fstream log("redo_record.txt", ios::in | ios::out);
-    if(log.bad() || !log.is_open()){
-        cout << "ERROR: unable to open file Redo.dat, exiting program\n";
-        return EXIT_FAILURE;
+    if(undo == 'Y' || undo == 'y'){
+        log.open("log.txt", ios::in | ios::out);
+        if(log.bad() || !log.is_open()){
+            cout << "ERROR: unable to open file log.dat, disabling undo option\n";
+            undo = 'N';
+        }
     }
     //PLAY
     do{
         curPlyr = turn%2 + 1;
         //Player move
+        cout << "ROUND " << turn/2 + 1 << endl;
         if(curPlyr == 1){
             cout << plyr1 << "'s turn.\n";
             cout << "Press Enter to begin your turn\n";
@@ -81,6 +87,9 @@ int main(int argc, char** argv)
             cout << "Press Enter to begin your turn\n";
             cin.ignore(1000,'\n');
         }
+        //Check if player wants to undo a move
+        if(undo == 'Y' || undo == 'y')
+            play::undo(log, board, p1Pcs, p2Pcs, turn);
         dspBrd(board, curPlyr);
         play::move(board, curPlyr);
         //TODO - Write out current gamestate to file here
@@ -90,7 +99,8 @@ int main(int argc, char** argv)
         //Increment turn counter
         turn++;
     }while(!winner);
-    
+    if(undo == 'Y' || undo == 'y')
+        log.close();
     //Declare the winner
     if(winner == 1)
         cout << "Congratulations " << plyr1 <<"! You won!\n";

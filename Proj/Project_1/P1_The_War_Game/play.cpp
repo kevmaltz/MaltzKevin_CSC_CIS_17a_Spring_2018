@@ -221,6 +221,7 @@ namespace play{
                 p2p++;
         }
         //Write out OWNER - UNIT ADDRESS - LOCATION INDICES
+        file << p1p+p2p << endl; //Record size
         for(int r=0; r < ROW_MX; r++)
             for(int c=0; c < COL_MX; c++){
                 if(board[r][c].isOcp)
@@ -228,8 +229,31 @@ namespace play{
                          << board[r][c].occUnit << " "
                          << r << " " << c << endl;
             }
-        //Track
-        file << p1p+p2p << endl;
+        
+    }
+    void undo(fstream &log, Location** brd, Unit p1[], Unit p2[], int &turn){
+        char und;
+        int nRnds;
+        int rcdSz;  //Record size
+        int newTurn;
+        string trash;
+        cout << "Undo round(s)? Y/N: ";
+        cin >> und; cin.ignore(1000,'\n');
+        if(und == 'Y' || und == 'y'){
+            do{
+            cout << "Undo how many rounds? ";
+            cin >> nRnds; cin.ignore(1000,'\n');
+            }while(nRnds*2 > turn);
+            newTurn = turn - nRnds*2;
+            for(int r=0; r < ROW_MX; r++){//Clear board
+                for(int c=0; c < COL_MX; c++)
+                    if(brd[r][c].isOcp)
+                        play::unOcpy(&brd[r][c]);
+            }
+            for(int i=0; i < newTurn; i++){
+                cin >> rcdSz; cin.ignore(1000,'\n');
+            }
+                
+        }
     }
 }
-    
