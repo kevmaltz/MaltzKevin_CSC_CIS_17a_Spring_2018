@@ -49,6 +49,37 @@ namespace setup{
                 delete [] buf;
             }
     }
+    void gmeSet(Location **board, Unit pPcs[], string plyr, int id){
+        char stpCh;
+        cout << plyr << " enter F for quick setup option."
+        << " Enter any other key for manual setup\n";
+        cin >> stpCh; cin.ignore(1000,'\n');
+        if(stpCh == 'F' || stpCh == 'f')
+            setup::spdSet(board, pPcs, id, plyr);
+        else
+            setup::setPcs(board, pPcs, plyr);
+    }
+    void spdSet(Location **board, Unit plyr[], int id, string pName){
+        fstream config;
+        if(id == 1)
+            config.open("spdSet1.txt", ios::in);
+        else if(id == 2)
+            config.open("spdSet2.txt", ios::in);
+        int indx;
+        int row, col;
+        if(config.is_open() && config.good()){
+            for(int i=0; i< N_PCS; i++){
+                config >> indx >> row >> col;
+                play::ocpy(&board[row][col], &plyr[indx]);
+            }
+        }
+        else{
+            cout << "ERROR: unable to open file spdSet.txt\n";
+            cout << "Manual setup initiated\n";
+            setup::setPcs(board, plyr, pName);
+        }
+        
+    }
     int fndMtch(Unit pcs[], string s){
         for(int i=0; i < N_PCS; i++){
             if(pcs[i].inPlay == false)
@@ -111,6 +142,7 @@ namespace setup{
                     //TODO - change this to use a stringstream to catch any error in the way user inputs numbers
                     cin >> slctR; cin.ignore(1000,','); 
                     cin >> slctC; cin.ignore(1000,'\n');
+                    slctR--; slctC--;   //Convert from 1-index to 0-index
                     //Valid row of locations depend on the player ID
                     if(id == 1 && (slctR < 0 || slctR > R_MX_P1)){
                         repeat = true;

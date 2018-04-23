@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 #include "play.h"
 
@@ -9,27 +10,33 @@ namespace play{
             //Bomb blows up, so do you!
             unOcpy(&loc);
             attckr->inPlay = false;
+            cout << "BOOM! Bomb destroys defending unit and is destroyed itself"
+                 << endl;
         }
         else if(attckr->name == "Engineers" && loc.occUnit->name == "Landmines"){
             //Remove Landmines
             unOcpy(&loc);
             //Place Engineers at the location
             ocpy(&loc, attckr);
+            cout << "Landmines removed successfully!\n";
         }
         else{
             if(attckr->priority > loc.occUnit->priority){
                 //Defender dies, invasion succeeds
                 unOcpy(&loc);
                 ocpy(&loc, attckr);
+                cout << "Your troops are victorious.\n";
             }
             else if(attckr->priority < loc.occUnit->priority){
                 //Attacker dies, invasion fails
                 attckr->inPlay = false;
+                cout << "Your troops have died.\n";
             }
             else if(attckr->priority == loc.occUnit->priority){
                 //Mutual destruction, location is now empty
                 unOcpy(&loc);
                 attckr->inPlay = false;
+                cout << "Mutual destruction!\n";
             }
         }
     }
@@ -111,6 +118,9 @@ namespace play{
             cout << "Enter your destination in R,C format: ";
             cin >> desR; cin.ignore(1000,','); 
             cin >> desC; cin.ignore(1000,'\n');
+            //Convert from 1-index to 0-index
+            strtR--; strtC--;
+            desR--; desC--;
             //Validate movement
             vldMve = mveVld(board, strtR, strtC, desR, desC, pTurn);
             if(!vldMve)
@@ -132,12 +142,11 @@ namespace play{
             }
         }while(!vldMve);
         //Now make the move, including combat
+        unOcpy(&board[strtR][strtC]);
         if(board[desR][desC].isOcp)
             combat(unit, board[desR][desC]);
-        else{
-            unOcpy(&board[strtR][strtC]);
+        else
             ocpy(&board[desR][desC], unit);
-        } 
     }
     void ocpy(Location* loc, Unit* unit){
         //Occupy location, place unit at location, set unit as in play
@@ -173,11 +182,10 @@ namespace play{
         loc->occUnit = NULL;
         loc->isOcp = false;
         //Clear board display of location for both players
-        for(int r=1; r < RM_RW-1; r++)
-            for(int c=1; c < RM_CL-1; c++){
-                loc->dsply1[r][c] = ' ';
-                loc->dsply2[r][c] = ' ';
-            }
+        for(int c=1; c < RM_CL-1; c++){
+            loc->dsply1[2][c] = ' ';
+            loc->dsply2[2][c] = ' ';
+        }
     }
     string frmtCse(string s){
         int pos = -1;
@@ -192,8 +200,7 @@ namespace play{
 
         return s;
     }
-    int isWnr(int id, Unit p1[], Unit p2[])
-    {
+    int isWnr(int id, Unit p1[], Unit p2[]){
         int winner = 0;
         if(id == 1)
             if(!p2[N_PCS - 1].inPlay)
@@ -202,5 +209,64 @@ namespace play{
             if(!p1[N_PCS - 1].inPlay)
                 winner = id;
         return winner;
+    }
+    void wrtLog(fstream &file, Location **board, Unit p1[], Unit p2[]){
+        int rcrdSz = 0;
+        for(int i=0; i < N_PCS; i++){
+            if(p1[i].inPlay)
+                rcrdSz++;
+            if(p2[i].inPlay)
+                rcrdSz++;
+        }
+        //Write out to binary file. UNIT ADDRESS & LOCATION INDICES
+        file.write(reinterpret_cast<char*>(&rcrdSz), sizeof(int));
+        for(int r=0; r < ROW_MX; r++)
+            for(int c=0; c < COL_MX; c++){
+                if(board[r][c].isOcp){
+                    file.write(reinterpret_cast<char*>(&board[r][c].occUnit),sizeof(Unit*));
+                    file.write(reinterpret_cast<char*>(&r),sizeof(int));
+                    file.write(reinterpret_cast<char*>(&c),sizeof(int));
+                }  
+            }
+        
+    }
+    void undo(fstream &log, Location** brd, Unit p1[], Unit p2[], int &turn){
+        char und;
+        int nRnds, rcrdSz;  //Record size
+        int cursor = 0;
+        Unit* unit;
+        int r,c;
+        string trash;
+        cout << "Undo round(s)? Y/N: ";
+        cin >> und; cin.ignore(1000,'\n');
+        if(und == 'Y' || und == 'y'){
+            do{
+            cout << "Undo how many rounds? ";
+            cin >> nRnds; cin.ignore(1000,'\n');
+            }while(nRnds*2 > turn);
+            turn = turn - nRnds*2;
+            //Clear the board
+            for(int r=0; r < ROW_MX; r++){
+                for(int c=0; c < COL_MX; c++)
+                    if(brd[r][c].isOcp)
+                        play::unOcpy(&brd[r][c]);
+            }
+            //Find correct record, start from beginning
+            log.seekg(cursor,ios::beg);
+            for(int i=0; i < turn; i++){
+                log.read(reinterpret_cast<char*>(&rcrdSz),sizeof(int));
+                cursor += sizeof(int) + rcrdSz * (sizeof(Unit*) + sizeof(int)*2);
+                log.seekg(cursor,ios::beg);
+            }
+            //Read and use record
+            log.read(reinterpret_cast<char*>(&rcrdSz),sizeof(int));
+            for(int i=0; i < rcrdSz; i++){
+                log.read(reinterpret_cast<char*>(&unit),sizeof(Unit*));
+                log.read(reinterpret_cast<char*>(&r),sizeof(int));
+                log.read(reinterpret_cast<char*>(&c),sizeof(int));
+                ocpy(&brd[r][c], unit);
+            }
+            log.seekp(log.tellg());
+        }
     }
 }
