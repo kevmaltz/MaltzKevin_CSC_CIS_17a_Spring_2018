@@ -142,12 +142,11 @@ namespace play{
             }
         }while(!vldMve);
         //Now make the move, including combat
+        unOcpy(&board[strtR][strtC]);
         if(board[desR][desC].isOcp)
             combat(unit, board[desR][desC]);
-        else{
-            unOcpy(&board[strtR][strtC]);
+        else
             ocpy(&board[desR][desC], unit);
-        } 
     }
     void ocpy(Location* loc, Unit* unit){
         //Occupy location, place unit at location, set unit as in play
