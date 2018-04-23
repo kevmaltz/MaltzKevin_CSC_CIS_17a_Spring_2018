@@ -10,27 +10,33 @@ namespace play{
             //Bomb blows up, so do you!
             unOcpy(&loc);
             attckr->inPlay = false;
+            cout << "BOOM! Bomb destroys defending unit and is destroyed itself"
+                 << endl;
         }
         else if(attckr->name == "Engineers" && loc.occUnit->name == "Landmines"){
             //Remove Landmines
             unOcpy(&loc);
             //Place Engineers at the location
             ocpy(&loc, attckr);
+            cout << "Landmines removed successfully!\n";
         }
         else{
             if(attckr->priority > loc.occUnit->priority){
                 //Defender dies, invasion succeeds
                 unOcpy(&loc);
                 ocpy(&loc, attckr);
+                cout << "Your troops are victorious.\n";
             }
             else if(attckr->priority < loc.occUnit->priority){
                 //Attacker dies, invasion fails
                 attckr->inPlay = false;
+                cout << "Your troops have died.\n";
             }
             else if(attckr->priority == loc.occUnit->priority){
                 //Mutual destruction, location is now empty
                 unOcpy(&loc);
                 attckr->inPlay = false;
+                cout << "Mutual destruction!\n";
             }
         }
     }
@@ -117,7 +123,6 @@ namespace play{
             desR--; desC--;
             //Validate movement
             vldMve = mveVld(board, strtR, strtC, desR, desC, pTurn);
-            cout << board[strtR][strtC].isOcp << endl;
             if(!vldMve)
                 cout << "Invalid Move\n";
             if(board[strtR][strtC].isOcp){
