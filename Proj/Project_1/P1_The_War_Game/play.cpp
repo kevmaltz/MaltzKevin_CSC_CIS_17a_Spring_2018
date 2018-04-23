@@ -112,8 +112,12 @@ namespace play{
             cout << "Enter your destination in R,C format: ";
             cin >> desR; cin.ignore(1000,','); 
             cin >> desC; cin.ignore(1000,'\n');
+            //Convert from 1-index to 0-index
+            strtR--; strtC--;
+            desR--; desC--;
             //Validate movement
             vldMve = mveVld(board, strtR, strtC, desR, desC, pTurn);
+            cout << board[strtR][strtC].isOcp << endl;
             if(!vldMve)
                 cout << "Invalid Move\n";
             if(board[strtR][strtC].isOcp){

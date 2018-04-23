@@ -32,7 +32,6 @@ int main(int argc, char** argv)
 {
     string plyr1;           //Name of player 1
     string plyr2;           //Name of player 2
-    char stpCh;             //Setup type chosen by players
     unsigned int turn = 0;  //The current turn number. Increments +1 every turn
     int curPlyr;            //Current player whos turn it is
     bool winner = false;
@@ -58,22 +57,10 @@ int main(int argc, char** argv)
     setup::stPlyrs(plyr1, plyr2);
     //player 1 piece setup
     dspBrd(board,1);
-    cout << plyr1 << " enter F for quick setup option."
-         << " Enter any other key for manual setup\n";
-    cin >> stpCh; cin.ignore(1000,'\n');
-    if(stpCh == 'F' || stpCh == 'f')
-        setup::spdSet(board, p1Pcs, 1, plyr1);
-    else
-        setup::setPcs(board, p1Pcs, plyr1);
+    setup::gmeSet(board, p1Pcs, plyr1, 1);
     //player 2 piece setup
     dspBrd(board,2);
-    cout << plyr2 << " enter F for quick setup option."
-         << " Enter any other key for manual setup\n";
-    cin >> stpCh; cin.ignore(1000,'\n');
-    if(stpCh == 'F' || stpCh == 'f')
-        setup::spdSet(board, p2Pcs, 2, plyr2);
-    else
-        setup::setPcs(board, p2Pcs, plyr2);
+    setup::gmeSet(board, p2Pcs, plyr2, 2);
     //Open REDO file
     fstream log("redo_record.txt", ios::in | ios::out);
     if(log.bad() || !log.is_open()){
@@ -84,15 +71,24 @@ int main(int argc, char** argv)
     do{
         curPlyr = turn%2 + 1;
         //Player move
-        if(curPlyr == 1)
+        if(curPlyr == 1){
             cout << plyr1 << "'s turn.\n";
-        else
+            cout << "Press Enter to begin your turn\n";
+            cin.ignore(1000,'\n');
+        }
+        else{
             cout << plyr2 << "'s turn.\n";
+            cout << "Press Enter to begin your turn\n";
+            cin.ignore(1000,'\n');
+        }
+        dspBrd(board, curPlyr);
         play::move(board, curPlyr);
         //TODO - Write out current gamestate to file here
         play::wrtLog( log, board, p1Pcs, p2Pcs);
         //Check if won game
         winner = play::isWnr(curPlyr, p1Pcs, p1Pcs);
+        //Increment turn counter
+        turn++;
     }while(!winner);
     
     //Declare the winner
@@ -114,8 +110,8 @@ void dspBrd(Location **board, int pID){
     //Always display the current players' board half on bottom
     if(pID == 1){
         //Label the columns for the player, top of board
-        cout << right << setw(8) << "C0" << setw(18) << "C1" 
-             << setw(18) << "C2" << setw(18) << "C3" << setw(18) << " C4\n";
+        cout << right << setw(8) << "C1" << setw(18) << "C2" 
+             << setw(18) << "C3" << setw(18) << "C4" << setw(18) << " C5\n";
         // bR/bC = current board row/col; rmR/rmC = current row/col of indv location display
         for(int bR=ROW_MX-1; bR >= 0; bR--){
             for(int rmR=0; rmR < RM_RW; rmR++){
@@ -132,7 +128,7 @@ void dspBrd(Location **board, int pID){
                 }
                 //Display row numbers on right of board
                 if(rmR == 2)
-                    cout << "  R" << bR<< endl;
+                    cout << "  R" << bR+1 << endl;
                 else
                     cout << endl;
             }
@@ -140,13 +136,13 @@ void dspBrd(Location **board, int pID){
             dspVP1(bR);
         }
         //Label the columns for the player, bottom of board
-        cout << right << setw(8) << "C0" << setw(18) << "C1" 
-             << setw(18) << "C2" << setw(18) << "C3" << setw(18) << " C4\n";
+        cout << right << setw(8) << "C1" << setw(18) << "C2" 
+             << setw(18) << "C3" << setw(18) << "C4" << setw(18) << " C5\n";
     }
     else if(pID == 2){
         //Label the columns for the player, top of board
-        cout << right << setw(8) << "C4" << setw(18) << "C3" 
-             << setw(18) << "C2" << setw(18) << "C1" << setw(18) << " C0\n";
+        cout << right << setw(8) << "C5" << setw(18) << "C4" 
+             << setw(18) << "C3" << setw(18) << "C2" << setw(18) << " C1\n";
         for(int bR=0; bR < ROW_MX; bR++){
             for(int rmR=0; rmR < RM_RW; rmR++){
                 for(int bC=COL_MX-1; bC >= 0; bC--){
@@ -162,7 +158,7 @@ void dspBrd(Location **board, int pID){
                 }
                 //Display row numbers on right of board
                 if(rmR == 2)
-                    cout << "  R" << bR<< endl;
+                    cout << "  R" << bR+1 << endl;
                 else
                     cout << endl;
             }
@@ -170,8 +166,8 @@ void dspBrd(Location **board, int pID){
             dspVP2(bR);
         }
         //Label the columns for the player, bottom of board
-        cout << right << setw(8) << "C4" << setw(18) << "C3" 
-             << setw(18) << "C2" << setw(18) << "C1" << setw(18) << " C0\n";
+        cout << right << setw(8) << "C5" << setw(18) << "C4" 
+             << setw(18) << "C3" << setw(18) << "C2" << setw(18) << " C1\n";
     }
     else
         cout << "ERROR: Cannot display the board.\n";
