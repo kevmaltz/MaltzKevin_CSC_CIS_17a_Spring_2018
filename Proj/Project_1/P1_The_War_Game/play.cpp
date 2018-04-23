@@ -218,16 +218,7 @@ namespace play{
             if(p2[i].inPlay)
                 rcrdSz++;
         }
-        fstream fileTxt("log.txt", ios::out | ios::in);
-        //Write out UNIT ADDRESS - LOCATION INDICES
-        fileTxt << rcrdSz << endl; //Record size
-        for(int r=0; r < ROW_MX; r++)
-            for(int c=0; c < COL_MX; c++){
-                if(board[r][c].isOcp)
-                    fileTxt << board[r][c].occUnit << " "
-                         << r << " " << c << endl;
-            }
-        //Write out to binary file
+        //Write out to binary file. UNIT ADDRESS & LOCATION INDICES
         file.write(reinterpret_cast<char*>(&rcrdSz), sizeof(int));
         for(int r=0; r < ROW_MX; r++)
             for(int c=0; c < COL_MX; c++){
