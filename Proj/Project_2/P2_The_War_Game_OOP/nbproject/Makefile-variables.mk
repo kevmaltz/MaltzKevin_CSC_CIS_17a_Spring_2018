@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=Cygwin-Windows
 CND_ARTIFACT_DIR_Debug=dist/Debug/Cygwin-Windows
-CND_ARTIFACT_NAME_Debug=p1_the_war_game
-CND_ARTIFACT_PATH_Debug=dist/Debug/Cygwin-Windows/p1_the_war_game
+CND_ARTIFACT_NAME_Debug=p2_the_war_game_oop
+CND_ARTIFACT_PATH_Debug=dist/Debug/Cygwin-Windows/p2_the_war_game_oop
 CND_PACKAGE_DIR_Debug=dist/Debug/Cygwin-Windows/package
-CND_PACKAGE_NAME_Debug=p1thewargame.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/Cygwin-Windows/package/p1thewargame.tar
+CND_PACKAGE_NAME_Debug=p2thewargameoop.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/Cygwin-Windows/package/p2thewargameoop.tar
 # Release configuration
 CND_PLATFORM_Release=Cygwin-Windows
 CND_ARTIFACT_DIR_Release=dist/Release/Cygwin-Windows
-CND_ARTIFACT_NAME_Release=p1_the_war_game
-CND_ARTIFACT_PATH_Release=dist/Release/Cygwin-Windows/p1_the_war_game
+CND_ARTIFACT_NAME_Release=p2_the_war_game_oop
+CND_ARTIFACT_PATH_Release=dist/Release/Cygwin-Windows/p2_the_war_game_oop
 CND_PACKAGE_DIR_Release=dist/Release/Cygwin-Windows/package
-CND_PACKAGE_NAME_Release=p1thewargame.tar
-CND_PACKAGE_PATH_Release=dist/Release/Cygwin-Windows/package/p1thewargame.tar
+CND_PACKAGE_NAME_Release=p2thewargameoop.tar
+CND_PACKAGE_PATH_Release=dist/Release/Cygwin-Windows/package/p2thewargameoop.tar
 #
 # include compiler specific variables
 #
