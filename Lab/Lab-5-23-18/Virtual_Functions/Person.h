@@ -9,13 +9,14 @@
 #define PERSON_H
 
 #include <string>
+
 class Person{
     protected:
         std::string name;
         int age;
+        int id;
     public:
-        Person(std::string n="", int a=0){name=n; age=a;}
-        virtual ~Person();
+        virtual ~Person()=0;
 };
 
 #endif /* PERSON_H */

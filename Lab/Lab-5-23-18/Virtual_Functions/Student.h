@@ -13,9 +13,9 @@
 class Student : public Person{
     private:
         std::vector<int> marks;
-        int id;
+        int findSum();
     public:
-        Student();
+        Student(int);
         void getdata();
         void putdata();
     
