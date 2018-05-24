@@ -16,13 +16,17 @@
 
 #include "Constants.h"
 #include "Unit.h"
-struct Location{
-    char type;      //What type of position is it. Camp/Battlefield/Frontline/Headquarters/Mountain
-    bool isOcp;     //If location occupied, set true
-    bool isRR;      //Set true if location is on railroad line
-    char dsply1[RM_RW][RM_CL]; //Display for player 1
-    char dsply2[RM_RW][RM_CL]; //Display for player 2
-    Unit *occUnit;  //Pointer to unit occupying the location.
+//struct Location{
+//    char type;      //What type of position is it. Camp/Battlefield/Frontline/Headquarters/Mountain
+//    bool isOcp;     //If location occupied, set true
+//    bool isRR;      //Set true if location is on railroad line
+//    char dsply1[RM_RW][RM_CL]; //Display for player 1
+//    char dsply2[RM_RW][RM_CL]; //Display for player 2
+//    Unit *occUnit;  //Pointer to unit occupying the location.
+//};
+class Location{
+    protected:
+    public:
 };
 
 #endif /* LOCATION_H */
