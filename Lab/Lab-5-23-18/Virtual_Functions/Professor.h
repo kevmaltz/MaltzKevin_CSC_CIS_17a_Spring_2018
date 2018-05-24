@@ -12,9 +12,8 @@
 class Professor : public Person{
     private:
         int pub;
-        int id;
     public:
-        Professor();
+        Professor(int);
         void getdata();
         void putdata();
 };
