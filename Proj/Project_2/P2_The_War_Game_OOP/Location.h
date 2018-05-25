@@ -24,6 +24,7 @@
 //    char dsply2[RM_RW][RM_CL]; //Display for player 2
 //    Unit *occUnit;  //Pointer to unit occupying the location.
 //};
+//
 class Location{
     protected:
     public:
