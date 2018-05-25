@@ -15,12 +15,13 @@
 #define DISPLAY_H
 
 #include <string>
+#include "Constants.h"
 
 class Unit;
 
 class Display{
     private:
-        char room[5][13];
+        char room[RM_RW][RM_CL];
     public:
         void showLyr(int);
         void removeUnit();

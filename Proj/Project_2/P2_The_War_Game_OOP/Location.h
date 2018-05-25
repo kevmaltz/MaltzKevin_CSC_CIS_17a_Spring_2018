@@ -29,6 +29,7 @@ class Location{
         bool isOcp;
         Display pView[2];
         Unit *occUnit;
+        Location *range[8];
     public:
         Location();
         virtual void ocpy(Unit*);
