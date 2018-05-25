@@ -22,7 +22,7 @@ class Display{
     private:
         char room[5][13];
     public:
-        void show();
+        void showLyr(int);
         void removeUnit();
         void addUnit(std::string);
 };

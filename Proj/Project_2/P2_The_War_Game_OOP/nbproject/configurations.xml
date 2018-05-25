@@ -5,6 +5,7 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>Constants.h</itemPath>
+      <itemPath>Display.h</itemPath>
       <itemPath>Location.h</itemPath>
       <itemPath>Unit.h</itemPath>
       <itemPath>play.h</itemPath>
@@ -52,6 +53,8 @@
       </compileType>
       <item path="Constants.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Display.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Location.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Setup.dat" ex="false" tool="3" flavor2="0">
@@ -96,6 +99,8 @@
         </asmTool>
       </compileType>
       <item path="Constants.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Display.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Location.h" ex="false" tool="3" flavor2="0">
       </item>

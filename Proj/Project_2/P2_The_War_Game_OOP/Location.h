@@ -24,10 +24,17 @@
 //    char dsply2[RM_RW][RM_CL]; //Display for player 2
 //    Unit *occUnit;  //Pointer to unit occupying the location.
 //};
-//
 class Location{
     protected:
+        bool isOcp;
+        Display pView[2];
+        Unit *occUnit;
     public:
+        Location();
+        virtual void ocpy(Unit*);
+        virtual void unOcpy();
+        void collate(int, int);
+        
 };
 
 #endif /* LOCATION_H */
