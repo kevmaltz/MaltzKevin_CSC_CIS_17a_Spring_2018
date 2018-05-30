@@ -4,8 +4,10 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>Board.h</itemPath>
       <itemPath>Constants.h</itemPath>
       <itemPath>Location.h</itemPath>
+      <itemPath>Player.h</itemPath>
       <itemPath>Unit.h</itemPath>
       <itemPath>play.h</itemPath>
       <itemPath>setup.h</itemPath>
@@ -50,9 +52,13 @@
           <standard>8</standard>
         </ccTool>
       </compileType>
+      <item path="Board.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Constants.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Location.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Player.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Setup.dat" ex="false" tool="3" flavor2="0">
       </item>
@@ -95,9 +101,13 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="Board.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Constants.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Location.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Player.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Setup.dat" ex="false" tool="3" flavor2="0">
       </item>
