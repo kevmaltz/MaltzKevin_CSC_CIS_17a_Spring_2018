@@ -7,6 +7,7 @@
       <itemPath>Constants.h</itemPath>
       <itemPath>Display.h</itemPath>
       <itemPath>Location.h</itemPath>
+      <itemPath>Railroad.h</itemPath>
       <itemPath>Unit.h</itemPath>
       <itemPath>play.h</itemPath>
       <itemPath>setup.h</itemPath>
@@ -57,6 +58,8 @@
       </item>
       <item path="Location.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Railroad.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Setup.dat" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Unit.h" ex="false" tool="3" flavor2="0">
@@ -103,6 +106,8 @@
       <item path="Display.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Location.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Railroad.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Setup.dat" ex="false" tool="3" flavor2="0">
       </item>

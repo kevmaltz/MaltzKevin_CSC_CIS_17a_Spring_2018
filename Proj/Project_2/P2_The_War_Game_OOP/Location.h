@@ -16,6 +16,7 @@
 
 #include "Constants.h"
 #include "Unit.h"
+#include "Display.h"
 //struct Location{
 //    char type;      //What type of position is it. Camp/Battlefield/Frontline/Headquarters/Mountain
 //    bool isOcp;     //If location occupied, set true
@@ -24,17 +25,18 @@
 //    char dsply2[RM_RW][RM_CL]; //Display for player 2
 //    Unit *occUnit;  //Pointer to unit occupying the location.
 //};
+class Board;
 class Location{
+    friend Board;
     protected:
         bool isOcp;
         Display pView[2];
         Unit *occUnit;
-        Location *range[8];
+        Location **range;
     public:
         Location();
         virtual void ocpy(Unit*);
         virtual void unOcpy();
-        void collate(int, int);
         
 };
 
