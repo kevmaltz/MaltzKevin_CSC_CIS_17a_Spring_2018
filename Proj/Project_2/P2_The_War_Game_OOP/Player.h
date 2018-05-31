@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /* 
  * File:   Player.h
  * Author: Kevin Maltz
@@ -14,7 +8,21 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <string>
+#include "Unit.h"
 
+class Player{
+    static int nPlyrs = 0;
+    static Unit **pieces = nullptr;
+    private:
+        std::string name;
+        int id;
+        //Unit *pieces;
+    public:
+        Player();
+        ~Player();
+        virtual void move();
+};
 
 #endif /* PLAYER_H */
 
