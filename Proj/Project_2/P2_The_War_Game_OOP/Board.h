@@ -19,6 +19,7 @@ class Board{
     public:
         Board();
         ~Board();
+        virtual void move();
         ///Occupy a location with the passed Unit, modify displays of location to reflect
         void ocpy(Location*, Unit*);
         ///Remove Unit from passed location, remove unit from displays as well

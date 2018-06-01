@@ -12,16 +12,15 @@
 #include "Unit.h"
 
 class Player{
-    static int nPlyrs = 0;
-    static Unit **pieces = nullptr;
+    static int nPlyrs = 0;  //use to assign id value to player
     private:
         std::string name;
         int id;
-        //Unit *pieces;
+        Unit *pieces;
     public:
         Player();
         ~Player();
-        virtual void move();
+        virtual void play();
 };
 
 #endif /* PLAYER_H */
